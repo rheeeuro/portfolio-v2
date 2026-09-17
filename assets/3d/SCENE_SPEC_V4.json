@@ -1,0 +1,120 @@
+{
+  "version": "4.0",
+  "direction": "Stylized semi-realistic, warm cinematic developer room, optimized for web",
+  "room_m": [
+    4.8,
+    3.6,
+    2.7
+  ],
+  "main_scene": "developer_room_concept_v4.glb",
+  "camera_positions": {
+    "home": {
+      "position": [
+        0.05,
+        -3.75,
+        1.48
+      ],
+      "target": [
+        0.0,
+        0.72,
+        1.18
+      ],
+      "fov": 39
+    },
+    "projects": {
+      "position": [
+        0.02,
+        -1.08,
+        1.23
+      ],
+      "target": [
+        0.08,
+        0.76,
+        1.16
+      ],
+      "fov": 34
+    },
+    "about": {
+      "position": [
+        -0.58,
+        -0.2,
+        1.28
+      ],
+      "target": [
+        -0.48,
+        0.4,
+        0.82
+      ],
+      "fov": 30
+    },
+    "experience": {
+      "position": [
+        -1.12,
+        -1.08,
+        1.62
+      ],
+      "target": [
+        -1.85,
+        0.78,
+        1.72
+      ],
+      "fov": 34
+    },
+    "window": {
+      "position": [
+        0.36,
+        -0.62,
+        1.52
+      ],
+      "target": [
+        0.28,
+        1.72,
+        1.7
+      ],
+      "fov": 36
+    }
+  },
+  "interaction_contract": {
+    "Projects": "monitor_monitor_screen",
+    "About": [
+      "notebook_page_left",
+      "notebook_page_right"
+    ],
+    "Theme": "switch_switch_toggle",
+    "Environment": "window_glass",
+    "Sound": [
+      "speakerL_woofer",
+      "speakerR_woofer"
+    ]
+  },
+  "render_notes": {
+    "tone_mapping": "ACESFilmic",
+    "recommended_exposure": 1.05,
+    "shadow_map": "PCFSoftShadowMap",
+    "color_space": "SRGB",
+    "ambient": "warm-neutral low intensity",
+    "night": "monitor + lamp + city/window practicals"
+  },
+  "alignment": {
+    "reference": "concept-art.png / Warm & Real",
+    "home_camera_fov": 39,
+    "priority": [
+      "camera",
+      "desk",
+      "window",
+      "monitor",
+      "chair",
+      "lamp",
+      "notebook",
+      "speakers",
+      "props"
+    ],
+    "note": "Screen-space composition takes precedence over exact prop identity."
+  },
+  "shader_hooks": {
+    "window_glass": "rain / refraction / fog GLSL",
+    "monitor_screen": "CRT / dissolve transition",
+    "notebook_pages": "paper reveal + SVG DOM handoff",
+    "speaker_woofers": "WebAudio FFT scale animation"
+  }
+}

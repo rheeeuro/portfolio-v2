@@ -1,0 +1,87 @@
+{
+  "interaction_nodes": {
+    "monitor_monitor_screen": true,
+    "notebook_page_left": true,
+    "notebook_page_right": true,
+    "switch_switch_toggle": true,
+    "window_glass": true,
+    "speakerL_woofer": true,
+    "speakerR_woofer": true
+  },
+  "all_interaction_nodes_present": true,
+  "camera_contract": {
+    "home": {
+      "position": [
+        0.05,
+        -3.75,
+        1.48
+      ],
+      "target": [
+        0.0,
+        0.72,
+        1.18
+      ],
+      "fov": 39
+    },
+    "projects": {
+      "position": [
+        0.02,
+        -1.08,
+        1.23
+      ],
+      "target": [
+        0.08,
+        0.76,
+        1.16
+      ],
+      "fov": 34
+    },
+    "about": {
+      "position": [
+        -0.58,
+        -0.2,
+        1.28
+      ],
+      "target": [
+        -0.48,
+        0.4,
+        0.82
+      ],
+      "fov": 30
+    },
+    "experience": {
+      "position": [
+        -1.12,
+        -1.08,
+        1.62
+      ],
+      "target": [
+        -1.85,
+        0.78,
+        1.72
+      ],
+      "fov": 34
+    },
+    "window": {
+      "position": [
+        0.36,
+        -0.62,
+        1.52
+      ],
+      "target": [
+        0.28,
+        1.72,
+        1.7
+      ],
+      "fov": 36
+    }
+  },
+  "alignment_changes": [
+    "Home camera changed to 39\u00b0 FOV and pulled back for less perspective distortion",
+    "Chair moved to foreground-left and rotated to clear notebook/monitor sightlines",
+    "Lamp moved to monitor-left to match Warm & Real focal hierarchy",
+    "Window recentered behind workstation and remains dominant background shape",
+    "Desk/monitor cluster recentered; notebook and props spaced for interaction clarity"
+  ],
+  "reference": "concept-art.png Warm & Real panel"
+}
