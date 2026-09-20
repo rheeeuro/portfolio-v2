@@ -1,8 +1,34 @@
 'use client';
-import { projects } from '@/content/projects';
+import Image from 'next/image';
+import { projects, otherProjects } from '@/content/projects';
+import {
+  profile,
+  skills,
+  experiences,
+  education,
+  awards,
+} from '@/content/profile';
 import { phaseAtHour, phases } from '@/lib/time';
 import { useEnvironment } from '@/stores/environment';
 import styles from '../Workspace.module.css';
+
+function ProjectLinks({ links }: { links: { label: string; href: string }[] }) {
+  return (
+    <div className={styles.contentLinks}>
+      {links.map((link) => (
+        <a
+          key={link.href}
+          href={link.href}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          {link.label} <span aria-hidden="true">↗</span>
+        </a>
+      ))}
+    </div>
+  );
+}
+
 export function Projects() {
   return (
     <>
@@ -13,12 +39,9 @@ export function Projects() {
         <em>Made to be used.</em>
       </h2>
       <p className={styles.intro}>
-        작은 디테일부터 전체 구조까지.
+        B2B 솔루션부터 직접 운영하는 서비스까지.
         <br />
-        문제를 이해하고, 더 나은 사용 경험을 만듭니다.
-      </p>
-      <p className={styles.sample}>
-        CONTENT PREVIEW · 실제 프로젝트 자료로 교체할 샘플 콘텐츠입니다.
+        문제를 정의하고, 기술을 선택하고, 결과로 검증한 기록입니다.
       </p>
       <div className={styles.projectList}>
         {projects.map((project) => (
@@ -29,131 +52,197 @@ export function Projects() {
                 <span className={styles.eyebrow}>{project.category}</span>
                 <h3>{project.title}</h3>
                 <p>{project.stack}</p>
+                <span className={styles.resultBadge}>{project.highlight}</span>
               </div>
-              <span className={styles.projectArrow}>↗</span>
+              <span className={styles.projectArrow} aria-hidden="true">
+                ↗
+              </span>
             </summary>
             <div className={styles.projectBody}>
+              <p className={styles.projectMeta}>
+                {project.period}
+                <br />
+                {project.role}
+              </p>
               <p>{project.description}</p>
+              <figure className={styles.projectFigure}>
+                <Image
+                  src={project.image.src}
+                  width={project.image.width}
+                  height={project.image.height}
+                  alt={project.image.alt}
+                  sizes="(max-width: 760px) 90vw, 480px"
+                />
+                <figcaption>{project.image.caption}</figcaption>
+              </figure>
               <h4>Problem</h4>
               <p>{project.problem}</p>
               <h4>Technical decisions</h4>
               <p>{project.decision}</p>
-              <h4>Role / Architecture / Challenges</h4>
-              <p>
-                담당 범위, 구조와 해결 과정은 실제 프로젝트 자료 입력 후
-                공개합니다.
-              </p>
+              <h4>Implementation</h4>
+              <p>{project.implementation}</p>
               <h4>Result / Retrospective</h4>
-              <p>검증된 결과와 회고를 준비 중입니다.</p>
+              <p>{project.result}</p>
+              <ProjectLinks links={project.links} />
             </div>
           </details>
+        ))}
+      </div>
+      <h3 className={styles.contentHeading}>More things I’ve built</h3>
+      <div className={styles.otherProjects}>
+        {otherProjects.map((project) => (
+          <article key={project.title}>
+            <p className={styles.eyebrow}>{project.category}</p>
+            <h3>{project.title}</h3>
+            <p className={styles.projectMeta}>
+              {project.period}
+              <br />
+              {project.stack}
+            </p>
+            <p>{project.description}</p>
+            <ProjectLinks links={project.links} />
+          </article>
         ))}
       </div>
     </>
   );
 }
+
 export function About() {
   return (
     <>
-      <p className={styles.eyebrow}>02 / NOTES TO SELF</p>
+      <p className={styles.eyebrow}>02 / {profile.englishName}</p>
       <h2>
-        Good interfaces.
+        문제를 구조화하고,
         <br />
-        <em>Considered details.</em>
+        <em>더 나은 해법을 찾습니다.</em>
       </h2>
-      <p className={styles.intro}>
-        좋은 인터페이스는 사용자를 이해하는 것에서 시작합니다.
+      <p className={styles.profileName}>
+        {profile.name} <span>{profile.role}</span>
       </p>
+      <p className={styles.intro}>{profile.introduction}</p>
+      <p className={styles.intro}>{profile.focus}</p>
       <div className={styles.notebook}>
-        <span className={styles.noteDate}>FIELD NOTES / 001</span>
-        <svg
-          viewBox="0 0 560 245"
-          role="img"
-          aria-label="Frontend Developer의 네 가지 관심사: UI, Performance, Architecture, Interaction"
-        >
-          <g fill="none" stroke="currentColor" strokeWidth="1.5">
-            <path
-              className={styles.draw}
-              pathLength="1"
-              d="M48 70 L48 209 M48 95 Q48 110 65 110 H190 M48 139 Q48 153 65 153 H190 M48 180 Q48 195 65 195 H190 M280 70 V95 Q280 110 296 110 H349"
-            />
-          </g>
-          <g fill="currentColor">
-            <text x="28" y="45" fontSize="25" fontFamily="Georgia, serif">
-              Frontend Developer
-            </text>
-            <text x="205" y="116" fontSize="17">
-              UI
-            </text>
-            <text x="205" y="159" fontSize="17">
-              Performance
-            </text>
-            <text x="205" y="201" fontSize="17">
-              Architecture
-            </text>
-            <text x="362" y="116" fontSize="17">
-              Interaction
-            </text>
-          </g>
-        </svg>
-        <p>
-          “보기 좋은 것에서 한 걸음 더.
-          <br />
-          이해하기 쉽고, 사용하기 편한 것을 만듭니다.”
-        </p>
+        <span className={styles.noteDate}>HOW I THINK / HOW I BUILD</span>
+        <div className={styles.focusGrid}>
+          <div>
+            <span>01 / Problem Analysis</span>
+            <p>원인과 병목을 구조적으로 찾습니다.</p>
+          </div>
+          <div>
+            <span>02 / Product Thinking</span>
+            <p>기존 제품과 운영 맥락까지 고려합니다.</p>
+          </div>
+          <div>
+            <span>03 / Performance</span>
+            <p>측정 가능한 지표로 개선을 검증합니다.</p>
+          </div>
+          <div>
+            <span>04 / AI Workflow</span>
+            <p>반복 가능한 개발·업무 흐름을 만듭니다.</p>
+          </div>
+        </div>
       </div>
       <div className={styles.aboutNotes}>
         <div>
           <h3>How I work</h3>
           <p>
-            문제를 먼저 정의하고, 작은 단위로 검증하며, 선택한 이유를
-            기록합니다.
+            성능 병목은 데이터 흐름과 조회 구조에서 찾고, 새로운 기능은
+            결합도·확장성·유지보수 비용까지 고려해 설계합니다.
           </p>
         </div>
         <div>
-          <h3>Currently exploring</h3>
+          <h3>Currently building</h3>
           <p>
-            성능과 접근성, 유지보수 가능한 구조, 그리고 웹에서의 자연스러운
-            인터랙션.
+            AI를 개발 규칙·검증·업무 흐름에 연결하고 있습니다. 개인 프로젝트
+            Jongalab에서는 데이터 수집부터 자동매매까지 직접 구축하고
+            운영합니다.
           </p>
         </div>
       </div>
-      <p className={styles.sample}>
-        소개 문구는 프로토타입이며 실제 경력과 함께 다듬을 예정입니다.
-      </p>
+      <h3 className={styles.contentHeading}>Tools for the work</h3>
+      <dl className={styles.skillList}>
+        {skills.map((skill) => (
+          <div key={skill.category}>
+            <dt>{skill.category}</dt>
+            <dd>{skill.items}</dd>
+          </div>
+        ))}
+      </dl>
+      <div className={styles.contactCard}>
+        <p className={styles.eyebrow}>LET’S TALK</p>
+        <a href={`mailto:${profile.email}`}>{profile.email}</a>
+        <a href={`tel:${profile.phone.replaceAll('-', '')}`}>{profile.phone}</a>
+        <ProjectLinks links={profile.links} />
+      </div>
     </>
   );
 }
+
 export function Experience() {
   return (
     <>
-      <p className={styles.eyebrow}>03 / COMMIT HISTORY</p>
+      <p className={styles.eyebrow}>03 / EXPERIENCE</p>
       <h2>
         Always learning.
         <br />
         <em>Always building.</em>
       </h2>
-      <p className={styles.intro}>경험을 쌓고, 관점을 넓혀가는 과정.</p>
+      <p className={styles.intro}>
+        제품 개발, 성능 개선, 연구와 운영을 거쳐 쌓아온 경험.
+      </p>
+      <div className={styles.metrics}>
+        <div>
+          <strong>190 → 14ms</strong>
+          <span>API 응답 시간 · 넷스루</span>
+        </div>
+        <div>
+          <strong>2시간 → 10분</strong>
+          <span>회의록 작성·정리 · 넷스루</span>
+        </div>
+        <div>
+          <strong>70% 향상</strong>
+          <span>시나리오 작성 생산성 · 카카오엔터프라이즈</span>
+        </div>
+      </div>
       <div className={styles.timeline}>
-        {[
-          [
-            '03',
-            'Structure & systems',
-            '유지보수 가능한 구조와 팀의 개발 경험',
-          ],
-          ['02', 'Performance & ownership', '제품의 흐름과 사용자의 실제 경험'],
-          ['01', 'A solid foundation', '인터페이스 구현과 웹의 기본기'],
-        ].map(([year, title, description]) => (
-          <div key={year}>
-            <span>{year}</span>
-            <h3>{title}</h3>
-            <p>{description}</p>
+        {experiences.map((experience, index) => (
+          <div key={experience.company}>
+            <span>{String(index + 1).padStart(2, '0')}</span>
+            <p className={styles.experiencePeriod}>{experience.period}</p>
+            <h3>{experience.company}</h3>
+            <p className={styles.experienceRole}>{experience.role}</p>
+            <p>{experience.description}</p>
+            <ul className={styles.achievementList}>
+              {experience.achievements.map((item) => (
+                <li key={item}>{item}</li>
+              ))}
+            </ul>
           </div>
         ))}
       </div>
-      <p className={styles.sample}>
-        EXPERIENCE PLACEHOLDER · 실제 회사·기간·성과는 아직 입력하지 않았습니다.
-      </p>
+      <div className={styles.credentials}>
+        <section>
+          <h3 className={styles.contentHeading}>Education</h3>
+          {education.map((item) => (
+            <article key={item.title}>
+              <p className={styles.projectMeta}>{item.period}</p>
+              <h4>{item.title}</h4>
+              <p>{item.description}</p>
+            </article>
+          ))}
+        </section>
+        <section>
+          <h3 className={styles.contentHeading}>Awards</h3>
+          {awards.map((item) => (
+            <article key={item.title}>
+              <p className={styles.projectMeta}>{item.period}</p>
+              <h4>{item.title}</h4>
+              <p>{item.description}</p>
+            </article>
+          ))}
+        </section>
+      </div>
     </>
   );
 }

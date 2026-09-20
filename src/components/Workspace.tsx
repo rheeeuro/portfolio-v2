@@ -6,6 +6,7 @@ import { useNavigation } from '@/stores/navigation';
 import { useEnvironment } from '@/stores/environment';
 import { useAudio, toggleAudio, suspendAudio } from '@/stores/audio';
 import { parseView, type View } from '@/lib/scene';
+import { profile } from '@/content/profile';
 import { phaseAtHour } from '@/lib/time';
 import { Projects, About, Experience, Environment } from './overlays/Content';
 import styles from './Workspace.module.css';
@@ -127,7 +128,7 @@ export default function Workspace() {
               dr<span>.</span>
             </span>
             <span>
-              DEVELOPER’S ROOM<small>A FRONTEND DEVELOPER’S WORKSPACE</small>
+              DEVELOPER’S ROOM<small>RHEE EURO · FRONTEND DEVELOPER</small>
             </span>
           </button>
           <div className={styles.headerRight}>
@@ -167,9 +168,9 @@ export default function Workspace() {
               <em>my everyday.</em>
             </h1>
             <p>
-              생각하고, 만들고, 더 나은 답을 찾는 곳.
+              문제를 구조화하고, 더 나은 해법을 찾는 곳.
               <br />
-              프론트엔드 개발자의 작업실에 오신 것을 환영합니다.
+              프론트엔드 개발자 {profile.name}의 작업실입니다.
             </p>
           </div>
           <div className={styles.roomIndex}>
@@ -296,7 +297,7 @@ export default function Workspace() {
               start <em>here.</em>
             </h1>
             <p className={styles.bootDescription}>
-              한 개발자의 생각과 작업이 모이는 작은 공간.
+              프론트엔드 개발자 {profile.name}의 생각과 작업이 모이는 공간.
             </p>
             <div className={styles.terminal} aria-live="polite">
               <p>

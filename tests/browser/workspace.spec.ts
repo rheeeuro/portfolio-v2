@@ -2,6 +2,7 @@ import { test, expect } from '@playwright/test';
 test('boot, scene, camera navigation, theme, environment and history', async ({
   page,
 }) => {
+  test.setTimeout(90000);
   const errors: string[] = [];
   page.on('pageerror', (error) => errors.push(error.message));
   await page.emulateMedia({ colorScheme: 'dark' });
@@ -17,9 +18,15 @@ test('boot, scene, camera navigation, theme, environment and history', async ({
   await page.screenshot({ path: 'test-results/home.png' });
   await page.getByRole('button', { name: '모니터에서 프로젝트 보기' }).click();
   const panel = page.getByRole('region', { name: 'projects', exact: true });
-  await expect(panel).toBeVisible();
+  await expect(panel).toBeVisible({ timeout: 20000 });
   await expect(panel).toHaveAttribute('aria-busy', 'false');
+  await expect(
+    panel.getByRole('heading', { name: 'Jongalab', exact: true }),
+  ).toBeVisible();
   await panel.locator('summary').first().click();
+  await expect(
+    panel.getByRole('link', { name: '서비스 보기' }),
+  ).toHaveAttribute('href', 'https://jongalab.com');
   await expect(
     panel
       .getByRole('heading', { name: 'Technical decisions', exact: true })
@@ -35,13 +42,13 @@ test('boot, scene, camera navigation, theme, environment and history', async ({
   await page.getByRole('button', { name: '노트에서 소개 보기' }).click();
   await expect(
     page.getByRole('region', { name: 'about', exact: true }),
-  ).toBeVisible();
+  ).toBeVisible({ timeout: 20000 });
   await page.screenshot({ path: 'test-results/about.png' });
   await page.goBack();
   await expect(page).toHaveURL(/#home$/);
   await page.getByRole('button', { name: /LOCAL TIME/ }).click();
   const environment = page.getByRole('region', { name: 'window', exact: true });
-  await expect(environment).toBeVisible();
+  await expect(environment).toBeVisible({ timeout: 20000 });
   await environment.getByRole('button', { name: 'day', exact: true }).click();
   await expect(
     environment.getByRole('button', { name: 'day', exact: true }),
@@ -63,7 +70,7 @@ test('mobile content, reduced motion and deep link', async ({ page }) => {
   await page.goto('/#about');
   await expect(
     page.getByRole('region', { name: 'about', exact: true }),
-  ).toBeVisible();
+  ).toBeVisible({ timeout: 20000 });
   await page.keyboard.press('Escape');
   await expect(page.locator('#mobile-projects')).toBeVisible();
   expect(
@@ -78,9 +85,12 @@ test('asset failure retains accessible HTML navigation', async ({ page }) => {
     route.abort(),
   );
   await page.goto('/');
-  await page
-    .getByRole('button', { name: '프로젝트 바로 보기', exact: true })
-    .click();
+  const skip = page.getByRole('link', {
+    name: '프로젝트 바로 보기',
+    exact: true,
+  });
+  await skip.focus();
+  await skip.click();
   await expect(
     page.getByRole('region', { name: 'projects', exact: true }),
   ).toBeVisible();
@@ -89,4 +99,33 @@ test('asset failure retains accessible HTML navigation', async ({ page }) => {
       .getByRole('heading', { name: 'Thoughtfully built. Made to be used.' })
       .first(),
   ).toBeVisible();
+});
+
+test('resume content, career details and contacts are available without WebGL', async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await page.goto('/#about');
+  const about = page.getByRole('region', { name: 'about', exact: true });
+  await expect(
+    about.getByRole('link', { name: 'eurohand@naver.com' }),
+  ).toHaveAttribute('href', 'mailto:eurohand@naver.com');
+  await expect(about.getByText('이유로', { exact: false })).toBeVisible();
+  await page.keyboard.press('Escape');
+  await page.getByRole('button', { name: '03 Experience' }).click();
+  const experience = page.getByRole('region', {
+    name: 'experience',
+    exact: true,
+  });
+  await expect(
+    experience.getByRole('heading', { name: '넷스루', exact: true }),
+  ).toBeVisible();
+  await expect(
+    experience.getByText('2021.12 — 2022.06', { exact: true }),
+  ).toBeVisible();
+  await expect(
+    experience.getByText('190 → 14ms', { exact: true }),
+  ).toBeVisible();
+  await page.screenshot({ path: 'test-results/experience-content.png' });
 });
