@@ -19,7 +19,7 @@
 
 ## Content boundary
 
-Project and career content is explicitly sample/placeholder content until real portfolio data is supplied. No invented achievements or live contact links.
+Project and career content now follows the supplied resume and portfolio; see `docs/CONTENT_SOURCES.md`. Do not invent achievements, measurement conditions or attribution.
 
 ## Implementation status
 
@@ -27,4 +27,18 @@ Project and career content is explicitly sample/placeholder content until real p
 - Responsive content, reduced-motion handling, demand rendering and HTML fallback implemented.
 - Same-view navigation regression covered: repeated menu clicks must not leave the panel awaiting a camera animation that never starts.
 - Three.js 0.186 removed PCFSoftShadowMap; use PCFShadowMap while preserving the original scene JSON.
-- Browser verification was stopped on the user's instruction. Continue only static review, types, lint, build and Node tests; visual/composition acceptance remains pending.
+- Browser verification resumed with the user-authorized 3D lighting and monitor pass; use local Chrome for WebGL validation.
+
+## Portfolio reading flow
+
+- Entry screen now presents the developer’s focus, SmartOffer performance result and Jongalab operating experience.
+- SmartOffer has a static `/projects/smartoffer` case study with section navigation, a before/after concept diagram, contribution scope and email contact. Entry and project panel link to it.
+- API timing is attributed to the supplied portfolio; unavailable measurement conditions are explicitly identified.
+- Typecheck, lint, production build and all seven Node tests passed. Browser test entry-button selector updated; browser execution was subsequently resumed for the 3D pass.
+
+## 3D lighting and monitor pass
+
+- Runtime material roughness adjustments and a bulb-aligned warm spotlight; window fill and monitor glow balanced separately.
+- SmartOffer screenshot projected onto a cloned monitor geometry; optional texture loading does not block the room.
+- UV orientation/source preservation regression test and browser night-room/preview loading coverage added.
+- Chrome software WebGL screenshots cover home, project view, mobile and night. Native mobile GPU performance remains unmeasured.

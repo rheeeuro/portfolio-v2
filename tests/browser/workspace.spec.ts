@@ -7,7 +7,7 @@ test('boot, scene, camera navigation, theme, environment and history', async ({
   page.on('pageerror', (error) => errors.push(error.message));
   await page.emulateMedia({ colorScheme: 'dark' });
   await page.goto('/');
-  const enter = page.getByRole('button', { name: 'ENTER WORKSPACE' });
+  const enter = page.getByRole('button', { name: '작업실 둘러보기' });
   await expect(enter).toBeEnabled({ timeout: 30000 });
   await page.screenshot({ path: 'test-results/boot.png' });
   await enter.click();
@@ -73,6 +73,9 @@ test('mobile content, reduced motion and deep link', async ({ page }) => {
   ).toBeVisible({ timeout: 20000 });
   await page.keyboard.press('Escape');
   await expect(page.locator('#mobile-projects')).toBeVisible();
+  await expect(
+    page.getByRole('button', { name: '모니터에서 프로젝트 보기' }),
+  ).toBeVisible();
   expect(
     await page.evaluate(
       () => document.documentElement.scrollWidth <= innerWidth,
@@ -128,4 +131,31 @@ test('resume content, career details and contacts are available without WebGL', 
     experience.getByText('190 → 14ms', { exact: true }),
   ).toBeVisible();
   await page.screenshot({ path: 'test-results/experience-content.png' });
+});
+
+test('project texture loads and the night room remains navigable', async ({
+  page,
+}) => {
+  await page.emulateMedia({ colorScheme: 'dark', reducedMotion: 'reduce' });
+  const preview = page.waitForResponse((response) =>
+    response.url().endsWith('/assets/projects/smartoffer.webp'),
+  );
+  await page.goto('/');
+  expect((await preview).ok()).toBe(true);
+  await page.getByRole('button', { name: '작업실 둘러보기' }).click();
+  await page.getByRole('button', { name: /LOCAL TIME/ }).click();
+  const environment = page.getByRole('region', { name: 'window', exact: true });
+  await environment.getByRole('button', { name: 'night', exact: true }).click();
+  await page.keyboard.press('Escape');
+  await expect(
+    page.getByRole('button', { name: /LOCAL TIME · NIGHT/ }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole('button', { name: '모니터에서 프로젝트 보기' }),
+  ).toBeVisible();
+  await page.screenshot({ path: 'test-results/room-night.png' });
+  await page.getByRole('button', { name: '모니터에서 프로젝트 보기' }).click();
+  await expect(
+    page.getByRole('region', { name: 'projects', exact: true }),
+  ).toHaveAttribute('aria-busy', 'false');
 });

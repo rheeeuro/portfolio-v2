@@ -26,10 +26,11 @@ Next.js 16.3.5 / React 19.2 / strict TypeScript / R3F / Drei / Three.js / GSAP /
 
 ## 구현 범위
 
-- HTML 부팅 화면. GLB가 마운트되고 첫 프레임이 준비되면 ENTER 활성화, GSAP 축소 전환.
+- 소개·성과·SmartOffer/Jongalab 대표 카드를 보여주는 첫 화면. SmartOffer 상세는 3D 준비와 무관하게 접근 가능하며, GLB 첫 프레임 준비 후 작업실 둘러보기 활성화.
+- `/projects/smartoffer`: 서버 렌더링되는 독립 사례 페이지. 문제·기술 선택·기여·결과, 조회 개선 개념도, 목차 및 이메일 연락 링크.
 - 제공된 v4 GLB 로드. 기존 사물과 노드 이름 유지, 새로운 placeholder room 생성 없음.
 - `SCENE_SPEC_V4.json`의 home/projects/about/experience/window 카메라 그대로 사용. Z-up 유지, damp 이동, 자유 OrbitControls 없음.
-- 모니터 → HTML Projects / 노트 → About SVG 선 그리기 / Experience → 경력 placeholder.
+- 모니터 → Projects / 노트 → About / Experience → 실제 경력 콘텐츠.
 - 조명 스위치와 DOM 버튼 → 공통 theme 상태 및 방 조명 변경. 초기값은 시스템 색상 설정.
 - 창문 → 환경 패널. 기기 현지 시간 기준 dawn/day/sunset/night, 수동 시간 전환 및 현재 시간 복귀.
 - Clear/Rain mock 상태, 창문 투명도·거칠기 및 조명 변화. 실제 날씨 API 사용 없음.
@@ -38,7 +39,7 @@ Next.js 16.3.5 / React 19.2 / strict TypeScript / R3F / Drei / Three.js / GSAP /
 - 모바일 세로 콘텐츠 섹션과 별도 scene viewport. DPR 최대 1.5, reduced motion, demand rendering, 숨겨진 탭 render/audio 일시 정지.
 - 3D 로딩을 건너뛰는 Projects 접근, 오류 발생 시 HTML 탐색, JavaScript 비활성화 시 안내와 기본 콘텐츠.
 
-프로젝트와 소개는 명시적으로 표시된 샘플이며 회사·기간·수치 성과를 지어내지 않았습니다. 콘텐츠가 확정되기 전까지 metadata는 `noindex`입니다.
+프로젝트와 소개는 제공된 이력서·포트폴리오에서 가져옵니다(`docs/CONTENT_SOURCES.md`). SmartOffer 측정 환경 등 자료에 없는 사실은 추가하지 않았습니다. metadata의 기존 `noindex` 설정은 유지합니다.
 
 ## 소스 우선순위
 
@@ -64,8 +65,17 @@ v4 GLB는 약 294 KB, 16.1K triangles입니다. ACESFilmic / exposure 1.05 / sRG
 
 ## 검증과 남은 작업
 
-타입·ESLint·production build 및 Node 테스트를 실행합니다. 브라우저 검증은 사용자의 지시에 따라 중단했습니다. 브라우저 자동화 파일은 `tests/browser/`에만 분리되어 있으며 `npm test`에는 포함되지 않습니다. 전체 클릭 흐름과 시각적 구성 QA의 최종 통과를 주장하지 않습니다.
+타입·ESLint·production build 및 Node 테스트를 실행합니다. 3D 고도화 요청에서 브라우저 검증을 재개했습니다. 브라우저 자동화 파일은 `tests/browser/`에 분리되어 있으며 `npm test`에는 포함되지 않습니다. 로컬 Chrome의 소프트웨어 WebGL로 탐색·조명·환경·모바일·에셋 실패와 야간 화면을 검증합니다. 실제 모바일 GPU 성능은 별도 확인이 필요합니다.
 
-후속 범위: 실제 프로젝트/경력 자료, 콘셉트와의 시각적 비교 및 조명 조정, 전용 프로젝트 상세 URL, 빗방울·굴절·모니터 GLSL, WebGPU Playground, KTX2/Meshopt 및 고급 오디오 반응. 현재는 WebGL 기반 MVP이며 WebGPU와 추가 셰이더는 넣지 않았습니다.
+후속 범위: 콘셉트와의 시각적 비교 및 조명 조정, 다른 프로젝트의 상세 URL, 빗방울·굴절·모니터 GLSL, WebGPU Playground, KTX2/Meshopt 및 고급 오디오 반응. 현재는 WebGL 기반 MVP이며 WebGPU와 추가 셰이더는 넣지 않았습니다.
 
 `AGENTS.md`와 `CLAUDE.md`는 Next.js 개발 서버가 생성한 프로젝트 지침입니다.
+
+## 3D lighting and monitor pass
+
+- 기존 GLB와 카메라 계약을 보존하고 런타임 재질만 조정합니다. 나무·금속·플라스틱·종이·패브릭·도자기의 거칠기를 구분했습니다.
+- 전구 위치에 맞춘 따뜻한 스포트라이트와 창가 보조광, 낮춘 주변광으로 빛의 역할을 분리했습니다. 그림자 맵은 창가 2048, 램프 512이며 DPR 상한과 demand rendering을 유지합니다.
+- UV가 없는 모니터 지오메트리를 복제해 XZ 평면 UV를 만들고 기존 SmartOffer 스크린샷을 적용합니다. 이미지 로딩 실패 시 기존 발광 화면을 유지합니다.
+- 화면 호버 시 발광을 조금 높이고 Projects 버튼을 화면 아래로 이동했습니다. 텍스처·복제 지오메트리는 해제 시 정리합니다.
+
+창문 원경은 원본 도시 메쉬를 런타임에서 숨기고 기존 하늘 패널에 정적인 절차적 셰이더를 적용합니다. 낮은 도시 실루엣·원경 능선·하늘 그라데이션·구름과 시간대별 작은 야간 불빛을 표현하며, 비 설정에서는 대비를 낮춥니다. 원본 GLB와 창문 클릭 대상은 유지하고 추가 이미지 요청이나 지속 애니메이션은 사용하지 않습니다.

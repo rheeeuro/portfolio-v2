@@ -1,0 +1,264 @@
+.page {
+  background: #eae7df;
+  color: #35402f;
+  min-height: 100svh;
+  padding: 0 5%;
+}
+.header {
+  max-width: 1160px;
+  margin: auto;
+  padding: 30px 0;
+  border-bottom: 1px solid #35402f30;
+  display: flex;
+  justify-content: space-between;
+  gap: 24px;
+  font-size: 11px;
+}
+.header a {
+  text-decoration: none;
+}
+.header span {
+  color: #65705e;
+}
+.article {
+  max-width: 860px;
+  margin: auto;
+}
+.hero {
+  padding: 80px 0 40px;
+}
+.eyebrow {
+  font-size: 10px;
+  letter-spacing: 2px;
+  line-height: 1.8;
+  color: #65705e;
+}
+.hero h1 {
+  font:
+    400 clamp(48px, 8vw, 88px)/1.1 Georgia,
+    serif;
+  letter-spacing: -2px;
+  margin: 24px 0;
+}
+.hero h1 span {
+  display: block;
+  font:
+    500 clamp(24px, 4vw, 40px)/1.5 Arial,
+    sans-serif;
+  letter-spacing: -1px;
+  margin-top: 25px;
+  word-break: keep-all;
+}
+.lead,
+.section > p,
+.decision p,
+.section li,
+.contact > p {
+  font-size: 15px;
+  line-height: 1.95;
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+}
+.lead {
+  max-width: 650px;
+  color: #59634f;
+}
+.facts {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 24px;
+  margin: 36px 0 0;
+  border-top: 1px solid #35402f30;
+  padding-top: 25px;
+}
+.facts > div:last-child {
+  grid-column: 1 / -1;
+}
+.facts dt {
+  font-size: 10px;
+  color: #65705e;
+  letter-spacing: 1px;
+}
+.facts dd {
+  margin: 9px 0 0;
+  font-size: 13px;
+  line-height: 1.8;
+}
+.outcome {
+  background: #35402f;
+  color: #f4efdf;
+  padding: 32px;
+}
+.outcome .eyebrow {
+  color: #c3c9b5;
+}
+.outcome > p:nth-child(2) {
+  font-size: clamp(32px, 6vw, 60px);
+  margin: 22px 0;
+  letter-spacing: -1px;
+}
+.outcome strong {
+  color: #e8c49a;
+  font-weight: 400;
+}
+.outcome > span {
+  font-size: 12px;
+  line-height: 1.8;
+}
+.figure {
+  margin: 40px 0;
+}
+.figure img {
+  width: 100%;
+  height: auto;
+  display: block;
+  border: 1px solid #35402f25;
+}
+.figure figcaption {
+  margin-top: 12px;
+  font-size: 11px;
+  color: #65705e;
+}
+.toc {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px 30px;
+  padding: 22px 0;
+  border-block: 1px solid #35402f30;
+  font-size: 12px;
+}
+.toc a {
+  padding: 6px 0;
+  text-decoration: none;
+}
+.section {
+  padding: 50px 0;
+  border-bottom: 1px solid #35402f30;
+  scroll-margin-top: 24px;
+}
+.section h2,
+.contact h2 {
+  font-size: clamp(24px, 4vw, 34px);
+  font-weight: 500;
+  letter-spacing: -1px;
+  line-height: 1.5;
+  word-break: keep-all;
+}
+.decision {
+  margin-top: 35px;
+}
+.decision h3 {
+  font-size: 18px;
+  line-height: 1.6;
+}
+.flow {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 20px;
+  padding: 24px;
+  background: #dedfd3;
+  margin: 28px 0;
+}
+.flow span {
+  font-size: 10px;
+  letter-spacing: 1px;
+  color: #65705e;
+}
+.flow h3 {
+  font-size: 16px;
+}
+.flow p {
+  font-size: 12px;
+  line-height: 1.8;
+}
+.flow .flowArrow {
+  font-size: 24px;
+}
+.stateMap {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+.stateMap > div {
+  border-left: 2px solid #8a795a;
+  padding: 12px 16px;
+}
+.stateMap dt {
+  font-size: 12px;
+  color: #65705e;
+}
+.stateMap dd {
+  font-size: 14px;
+  margin: 10px 0 0;
+}
+.section ul {
+  padding-left: 20px;
+}
+.section li + li {
+  margin-top: 10px;
+}
+.note {
+  font-size: 12px;
+  line-height: 1.9;
+  color: #65705e;
+  border-left: 2px solid #8a795a;
+  padding-left: 18px;
+  margin: 28px 0;
+}
+.textLink {
+  display: inline-block;
+  font-size: 13px;
+  line-height: 1.8;
+  text-underline-offset: 5px;
+  padding: 12px 0;
+}
+.contact {
+  padding: 60px 0 80px;
+}
+.contactLink {
+  display: block;
+  width: fit-content;
+  font-size: clamp(18px, 4vw, 28px);
+  text-underline-offset: 7px;
+  margin: 28px 0;
+  overflow-wrap: anywhere;
+}
+.skip {
+  position: absolute;
+  top: -80px;
+  padding: 16px;
+  background: #35402f;
+  color: #fff;
+}
+.skip:focus {
+  top: 10px;
+}
+@media (max-width: 600px) {
+  .header span {
+    display: none;
+  }
+  .hero {
+    padding-top: 45px;
+  }
+  .facts {
+    grid-template-columns: 1fr;
+  }
+  .outcome {
+    padding: 24px;
+  }
+  .flow {
+    grid-template-columns: 1fr;
+    gap: 4px;
+  }
+  .flow .flowArrow {
+    transform: rotate(90deg);
+    justify-self: start;
+  }
+  .section {
+    padding: 35px 0;
+  }
+  .stateMap {
+    grid-template-columns: 1fr;
+  }
+}

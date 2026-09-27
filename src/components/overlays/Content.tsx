@@ -1,5 +1,6 @@
 'use client';
 import Image from 'next/image';
+import Link from 'next/link';
 import { projects, otherProjects } from '@/content/projects';
 import {
   profile,
@@ -65,6 +66,13 @@ export function Projects() {
                 {project.role}
               </p>
               <p>{project.description}</p>
+              {project.title === 'SmartOffer' && (
+                <div className={styles.contentLinks}>
+                  <Link href="/projects/smartoffer">
+                    SmartOffer 상세 사례 읽기 →
+                  </Link>
+                </div>
+              )}
               <figure className={styles.projectFigure}>
                 <Image
                   src={project.image.src}

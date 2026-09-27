@@ -1,5 +1,7 @@
 'use client';
 import dynamic from 'next/dynamic';
+import Link from 'next/link';
+import { projects } from '@/content/projects';
 import { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import { useNavigation } from '@/stores/navigation';
@@ -287,61 +289,88 @@ export default function Workspace() {
             <span>DEVELOPER’S ROOM</span>
             <span>EST. 2026 / WORKSPACE 001</span>
           </div>
-          <div className={styles.bootContent}>
-            <p className={styles.eyebrow}>
-              <span className={styles.statusDot} /> HELLO, WORLD.
-            </p>
-            <h1>
-              Good things
-              <br />
-              start <em>here.</em>
-            </h1>
-            <p className={styles.bootDescription}>
-              프론트엔드 개발자 {profile.name}의 생각과 작업이 모이는 공간.
-            </p>
-            <div className={styles.terminal} aria-live="polite">
-              <p>
-                <span>01</span> &gt; booting workspace... <b>done</b>
+          <div className={styles.landingContent}>
+            <div className={styles.landingIntro}>
+              <p className={styles.eyebrow}>RHEE EURO / FRONTEND DEVELOPER</p>
+              <h1>
+                문제를 구조화하고,
+                <br />
+                <em>결과로 검증합니다.</em>
+              </h1>
+              <p className={styles.landingName}>
+                프론트엔드 개발자 <strong>{profile.name}</strong>
               </p>
-              <p>
-                <span>02</span> &gt; loading room...{' '}
-                <b>{failed ? 'unavailable' : ready ? 'done' : 'loading'}</b>
-              </p>
-              <p>
-                <span>03</span> &gt; loading projects... <b>done</b>
-              </p>
-              <p>
-                <span>04</span> &gt; almost there...{' '}
-                <b>{ready ? 'done' : '...'}</b>
-              </p>
-              <p className={styles.ready}>
+              <p className={styles.landingDescription}>{profile.focus}</p>
+              <div className={styles.landingActions}>
+                <Link className={styles.enter} href="/projects/smartoffer">
+                  대표 프로젝트 보기 <span>↗</span>
+                </Link>
+                <button
+                  className={styles.explore}
+                  disabled={!ready || failed}
+                  onClick={enter}
+                >
+                  작업실 둘러보기 <span>→</span>
+                </button>
+              </div>
+              <p className={styles.sceneStatus} role="status">
                 {failed
-                  ? 'HTML workspace available.'
+                  ? '작업실을 불러오지 못했지만 프로젝트는 바로 읽을 수 있습니다.'
                   : ready
-                    ? 'workspace ready.'
-                    : 'Preparing your workspace…'}
+                    ? '3D 작업실이 준비되었습니다.'
+                    : '3D 작업실을 준비 중입니다. 프로젝트는 바로 읽을 수 있습니다.'}
               </p>
+              {slow && !ready && !failed && (
+                <p className={styles.loadingNote}>
+                  작업실 로딩이 평소보다 오래 걸리고 있습니다.
+                </p>
+              )}
+              <a
+                className={styles.landingContact}
+                href={`mailto:${profile.email}`}
+              >
+                함께 일할 이야기가 있다면 ↗
+              </a>
             </div>
-            <button
-              className={styles.enter}
-              disabled={!ready || failed}
-              onClick={enter}
-            >
-              ENTER WORKSPACE <span>↗</span>
-            </button>
-            <button
-              className={styles.bypass}
-              onClick={() => navigate('projects')}
-            >
-              프로젝트 바로 보기 <span>→</span>
-            </button>
-            {(failed || slow) && (
-              <p className={styles.loadingNote}>
-                {failed
-                  ? '3D 로딩에 실패했습니다. 프로젝트 바로 보기를 이용해 주세요.'
-                  : '로딩이 오래 걸리면 프로젝트를 먼저 확인할 수 있습니다.'}
-              </p>
-            )}
+            <section className={styles.featuredWork} aria-label="대표 프로젝트">
+              <p className={styles.eyebrow}>SELECTED WORK / 01—02</p>
+              <Link className={styles.featuredCard} href="/projects/smartoffer">
+                <span className={styles.eyebrow}>B2B · PERFORMANCE</span>
+                <h2>
+                  SmartOffer <span aria-hidden="true">↗</span>
+                </h2>
+                <strong>{projects[1].highlight}</strong>
+                <p>
+                  목록 조회 병목을 줄이고, 서버 상태와 UI 상태의 경계를 정리한
+                  과정.
+                </p>
+                <span className={styles.cardAction}>문제 해결 과정 읽기 →</span>
+              </Link>
+              <a
+                className={styles.featuredCard}
+                href={projects[0].links[0].href}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <span className={styles.eyebrow}>AI · BUILD & OPERATE</span>
+                <h2>
+                  Jongalab <span aria-hidden="true">↗</span>
+                </h2>
+                <strong>{projects[0].highlight}</strong>
+                <p>
+                  데이터 수집부터 분석·주문·청산까지 직접 설계하고 운영하는
+                  서비스.
+                </p>
+                <small>2026년 9월 기준 · 운영 규모</small>
+                <span className={styles.cardAction}>서비스 보기 · 새 탭 ↗</span>
+              </a>
+              <button
+                className={styles.bypass}
+                onClick={() => navigate('projects')}
+              >
+                전체 프로젝트 보기 <span>→</span>
+              </button>
+            </section>
           </div>
           <div className={styles.bootFooter}>
             <span>THOUGHTFULLY BUILT, ONE DETAIL AT A TIME.</span>

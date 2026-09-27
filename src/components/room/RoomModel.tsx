@@ -1,13 +1,23 @@
 'use client';
 import { useEffect, useMemo, useRef } from 'react';
 import { Html, useGLTF } from '@react-three/drei';
-import { useFrame, type ThreeEvent } from '@react-three/fiber';
-import { Box3, Mesh, MeshStandardMaterial, Vector3 } from 'three';
+import { useFrame, useThree, type ThreeEvent } from '@react-three/fiber';
+import {
+  Box3,
+  Mesh,
+  MeshStandardMaterial,
+  Vector3,
+  TextureLoader,
+  SRGBColorSpace,
+  ShaderMaterial,
+} from 'three';
+import { screenGeometry, refineMaterial } from './materials';
+import { projects } from '@/content/projects';
 import { sceneSpec, sceneUrl, type View } from '@/lib/scene';
 import { useNavigation } from '@/stores/navigation';
 import { useEnvironment } from '@/stores/environment';
 import { toggleAudio } from '@/stores/audio';
-import { skyColors } from './EnvironmentController';
+import { createWindowLandscape, landscapePalettes } from './windowLandscape';
 import styles from '../Workspace.module.css';
 
 const contract = sceneSpec.interaction_contract;
@@ -49,6 +59,7 @@ function Hotspot({
 export function RoomModel() {
   const { scene } = useGLTF(sceneUrl);
   const ready = useRef(false);
+  const invalidate = useThree((s) => s.invalidate);
   const theme = useEnvironment((s) => s.theme);
   const phase = useEnvironment((s) => s.phase);
   const weather = useEnvironment((s) => s.weather);
@@ -63,9 +74,35 @@ export function RoomModel() {
       if (object instanceof Mesh) {
         object.castShadow = !object.name.includes('glass');
         object.receiveShadow = true;
+        if (object.name.startsWith('city_')) {
+          object.visible = false;
+          object.castShadow = false;
+        }
         object.material = Array.isArray(object.material)
           ? object.material.map((m) => m.clone())
           : object.material.clone();
+        for (const material of [object.material].flat())
+          if (material instanceof MeshStandardMaterial)
+            refineMaterial(material);
+        if (
+          object.name === 'window_mullion' &&
+          object.material instanceof MeshStandardMaterial
+        ) {
+          object.material.color.set('#485154');
+          object.material.metalness = 0.15;
+          object.material.roughness = 0.78;
+        }
+        if (object.name === 'sky_panel') {
+          for (const material of [object.material].flat()) material.dispose();
+          object.material = createWindowLandscape();
+          object.geometry = screenGeometry(object.geometry);
+          object.castShadow = false;
+          object.receiveShadow = false;
+        }
+        if (object.name === contract.Projects) {
+          object.geometry = screenGeometry(object.geometry);
+          object.castShadow = false;
+        }
       }
     });
     clone.updateMatrixWorld(true);
@@ -77,13 +114,52 @@ export function RoomModel() {
         .setFromObject(model.getObjectByName(name)!)
         .getCenter(new Vector3());
     return {
-      monitor: center(contract.Projects).add(new Vector3(0, -0.05, 0)),
+      monitor: center(contract.Projects).add(new Vector3(0, -0.05, -0.24)),
       notebook: center(contract.About[0]).add(new Vector3(0, -0.08, 0.08)),
       window: center(contract.Environment).add(new Vector3(0, -0.1, 0.46)),
       switch: center(contract.Theme).add(new Vector3(0.1, -0.1, 0)),
     };
   }, [model]);
   useEffect(() => {
+    const screen = model.getObjectByName(contract.Projects) as Mesh;
+    const material = screen.material as MeshStandardMaterial;
+    let active = true;
+    const texture = new TextureLoader().load(
+      projects[1].image.src,
+      () => {
+        if (!active) return;
+        texture.colorSpace = SRGBColorSpace;
+        material.map = texture;
+        material.emissiveMap = texture;
+        material.color.set('#ffffff');
+        material.emissive.set('#ffffff');
+        material.roughness = 0.65;
+        material.metalness = 0;
+        material.needsUpdate = true;
+        invalidate();
+      },
+      undefined,
+      () => {
+        // Keep the original emissive screen when the optional preview fails.
+      },
+    );
+    return () => {
+      active = false;
+      material.map = null;
+      material.emissiveMap = null;
+      texture.dispose();
+    };
+  }, [model, invalidate]);
+  useEffect(() => {
+    const landscape = (model.getObjectByName('sky_panel') as Mesh)
+      .material as ShaderMaterial;
+    const palette = landscapePalettes[phase];
+    ['zenith', 'horizon', 'distant', 'nearCity'].forEach((key, index) => {
+      landscape.uniforms[key].value.set(palette[index]);
+    });
+    landscape.uniforms.night.value =
+      phase === 'night' ? 1 : phase === 'sunset' ? 0.3 : 0;
+    landscape.uniforms.rain.value = weather === 'rain' ? 1 : 0;
     model.traverse((object) => {
       if (
         !(object instanceof Mesh) ||
@@ -91,26 +167,30 @@ export function RoomModel() {
       )
         return;
       const material = object.material;
-      if (material.name === 'Sky_Sunset') {
-        material.color.set(skyColors[phase]);
-        material.emissive.set(skyColors[phase]);
-        material.emissiveIntensity = phase === 'day' ? 0.8 : 0.4;
-      }
       if (material.name === 'Screen_Emissive')
-        material.emissiveIntensity = theme === 'dark' ? 1.5 : 0.6;
+        material.emissiveIntensity = theme === 'dark' ? 0.65 : 0.35;
+      if (material.name === 'Warm_Emissive')
+        material.emissiveIntensity = theme === 'dark' ? 1.2 : 1.8;
       if (material.name === 'City_Window')
         material.emissiveIntensity = phase === 'night' ? 1.8 : 0.3;
       if (object.name === contract.Environment) {
         material.transparent = true;
-        material.opacity = weather === 'rain' ? 0.4 : 0.13;
+        material.opacity = weather === 'rain' ? 0.12 : 0.035;
+        material.metalness = 0;
         material.depthWrite = false;
-        material.roughness = weather === 'rain' ? 0.55 : 0.12;
+        material.roughness = weather === 'rain' ? 0.8 : 0.65;
       }
     });
-  }, [model, theme, phase, weather]);
+    invalidate();
+  }, [model, theme, phase, weather, invalidate]);
   useEffect(
     () => () => {
       model.traverse((object) => {
+        if (
+          object instanceof Mesh &&
+          (object.name === contract.Projects || object.name === 'sky_panel')
+        )
+          object.geometry.dispose();
         if (object instanceof Mesh)
           for (const material of [object.material].flat()) material.dispose();
       });
@@ -140,9 +220,18 @@ export function RoomModel() {
           document.body.style.cursor = action(event.object.name)
             ? 'pointer'
             : '';
+          const screen = model.getObjectByName(contract.Projects) as Mesh;
+          (screen.material as MeshStandardMaterial).emissiveIntensity =
+            (theme === 'dark' ? 0.65 : 0.35) +
+            (event.object.name === contract.Projects ? 0.15 : 0);
+          invalidate();
         }}
         onPointerOut={() => {
           document.body.style.cursor = '';
+          const screen = model.getObjectByName(contract.Projects) as Mesh;
+          (screen.material as MeshStandardMaterial).emissiveIntensity =
+            theme === 'dark' ? 0.65 : 0.35;
+          invalidate();
         }}
       />
       {view === 'home' && entered && (

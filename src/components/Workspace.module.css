@@ -1123,3 +1123,143 @@
     min-width: 0;
   }
 }
+
+/* The entry screen introduces the work before the interactive room. */
+.landingContent {
+  width: min(1120px, 100%);
+  margin: auto;
+  padding: 50px 0;
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: clamp(35px, 6vw, 90px);
+  align-items: center;
+}
+.landingIntro h1 {
+  font-size: clamp(30px, 3.8vw, 52px);
+  line-height: 1.45;
+  letter-spacing: -2px;
+  font-weight: 500;
+  margin: 24px 0;
+  word-break: keep-all;
+}
+.landingIntro h1 em {
+  color: #8a795a;
+  font-style: normal;
+}
+.landingName {
+  font-size: 15px;
+  margin: 24px 0 14px;
+}
+.landingDescription {
+  max-width: 470px;
+  font-size: 14px;
+  line-height: 1.9;
+  color: #65705e;
+  word-break: keep-all;
+}
+.landingActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 30px;
+}
+.landingActions .enter {
+  width: auto;
+  gap: 25px;
+  align-items: center;
+  text-decoration: none;
+  font-size: 12px;
+  letter-spacing: 0;
+}
+.explore {
+  border: 1px solid #35402f50;
+  background: transparent;
+  color: #35402f;
+  padding: 17px 20px;
+  font-size: 12px;
+}
+.explore span {
+  margin-left: 20px;
+}
+.explore:disabled {
+  opacity: 0.5;
+}
+.sceneStatus {
+  font-size: 11px;
+  line-height: 1.8;
+  color: #65705e;
+}
+.landingContact {
+  display: inline-block;
+  margin-top: 20px;
+  padding: 10px 0;
+  font-size: 12px;
+  text-underline-offset: 5px;
+}
+.featuredWork {
+  min-width: 0;
+}
+.featuredCard {
+  display: block;
+  padding: 25px 0;
+  border-bottom: 1px solid #35402f30;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.featuredCard:hover {
+  color: #796344;
+}
+.featuredCard h2 {
+  display: flex;
+  justify-content: space-between;
+  font:
+    400 32px Georgia,
+    serif;
+  margin: 10px 0 18px;
+}
+.featuredCard h2 span {
+  font-size: 22px;
+}
+.featuredCard strong {
+  font-size: 18px;
+  font-weight: 500;
+}
+.featuredCard p {
+  font-size: 12px;
+  line-height: 1.8;
+  color: #65705e;
+  word-break: keep-all;
+}
+.featuredCard small {
+  display: block;
+  font-size: 10px;
+  color: #65705e;
+}
+.cardAction {
+  display: block;
+  margin-top: 20px;
+  font-size: 11px;
+}
+.featuredWork .bypass {
+  padding: 20px 0;
+  font-size: 12px;
+}
+@media (max-width: 800px) {
+  .landingContent {
+    grid-template-columns: 1fr;
+    gap: 30px;
+    padding: 35px 0;
+    max-width: 520px;
+  }
+  .landingIntro h1 {
+    font-size: clamp(28px, 6vw, 40px);
+    letter-spacing: -1.5px;
+  }
+  .landingActions {
+    gap: 10px;
+  }
+  .landingActions .enter,
+  .explore {
+    padding: 16px;
+  }
+}
