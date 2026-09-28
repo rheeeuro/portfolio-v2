@@ -301,8 +301,8 @@ export function Environment() {
         </button>
       </div>
       <p className={styles.sample}>
-        시간은 기기 기준입니다. 날씨는 API를 사용하지 않는 미리보기이며, 빗방울
-        셰이더는 후속 구현 범위입니다.
+        시간은 기기 기준입니다. 날씨는 직접 선택하는 미리보기입니다. 비를 켜면
+        창문에 빗방울이 흐릅니다.
       </p>
     </>
   );

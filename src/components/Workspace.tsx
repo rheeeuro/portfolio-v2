@@ -1,6 +1,7 @@
 'use client';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
+import Image from 'next/image';
 import { projects } from '@/content/projects';
 import { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
@@ -90,8 +91,8 @@ export default function Workspace() {
     if (!entered || !boot.current) return;
     const tween = gsap.to(boot.current, {
       opacity: 0,
-      scale: reducedMotion ? 1 : 0.18,
-      duration: reducedMotion ? 0 : 0.7,
+      scale: 1,
+      duration: reducedMotion ? 0 : 0.3,
       ease: 'power3.inOut',
       onComplete: () => {
         setBootGone(true);
@@ -118,7 +119,7 @@ export default function Workspace() {
       >
         프로젝트 바로 보기
       </a>
-      <div className={styles.app} inert={!entered}>
+      <div className={styles.app} inert={!entered} hidden={!entered}>
         <header className={styles.header}>
           <button
             ref={homeButton}
@@ -141,7 +142,7 @@ export default function Workspace() {
         </header>
         <section className={styles.stage} aria-label="개발자의 3D 작업실">
           <div className={styles.canvas}>
-            {!failed && (
+            {entered && !failed && (
               <RoomScene reducedMotion={reducedMotion} visible={visible} />
             )}
           </div>
@@ -285,96 +286,190 @@ export default function Workspace() {
       </div>
       {!bootGone && (
         <div ref={boot} className={styles.boot} inert={entered}>
-          <div className={styles.bootHeader}>
-            <span>DEVELOPER’S ROOM</span>
-            <span>EST. 2026 / WORKSPACE 001</span>
-          </div>
-          <div className={styles.landingContent}>
-            <div className={styles.landingIntro}>
-              <p className={styles.eyebrow}>RHEE EURO / FRONTEND DEVELOPER</p>
-              <h1>
-                문제를 구조화하고,
-                <br />
-                <em>결과로 검증합니다.</em>
-              </h1>
-              <p className={styles.landingName}>
-                프론트엔드 개발자 <strong>{profile.name}</strong>
-              </p>
-              <p className={styles.landingDescription}>{profile.focus}</p>
-              <div className={styles.landingActions}>
-                <Link className={styles.enter} href="/projects/smartoffer">
-                  대표 프로젝트 보기 <span>↗</span>
-                </Link>
-                <button
-                  className={styles.explore}
-                  disabled={!ready || failed}
-                  onClick={enter}
-                >
-                  작업실 둘러보기 <span>→</span>
-                </button>
+          <header className={styles.bootHeader}>
+            <a href="#landing-top" className={styles.landingBrand}>
+              er<span>.</span> <span>이유로 / 개발자의 작업실</span>
+            </a>
+            <nav aria-label="포트폴리오 탐색">
+              <a href="#selected-work">프로젝트</a>
+              <a href={`mailto:${profile.email}`}>연락하기 ↗</a>
+            </nav>
+          </header>
+          <div className={styles.landingContent} id="landing-top">
+            <section className={styles.landingHero} aria-label="소개와 작업실">
+              <div className={styles.landingIntro}>
+                <p className={styles.eyebrow}>
+                  <span className={styles.statusDot} /> FRONTEND DEVELOPER ·
+                  RHEE EURO
+                </p>
+                <h1>
+                  문제를 구조화하고,
+                  <br />
+                  <em>결과로 검증합니다.</em>
+                </h1>
+                <p className={styles.landingDescription}>
+                  복잡한 문제를 명확한 구조로, 아이디어를 실제로 쓰이는
+                  제품으로.
+                  <br />
+                  프론트엔드 개발자 <strong>{profile.name}</strong>입니다.
+                </p>
+                <div className={styles.landingActions}>
+                  <a className={styles.enter} href="#selected-work">
+                    프로젝트 살펴보기 <span>↓</span>
+                  </a>
+                  <a
+                    className={styles.landingContact}
+                    href={`mailto:${profile.email}`}
+                  >
+                    함께 일하기 ↗
+                  </a>
+                </div>
+                <p className={styles.landingExpertise}>
+                  제품 개발 <span>/</span> 성능 개선 <span>/</span> AI · 자동화
+                </p>
               </div>
-              <p className={styles.sceneStatus} role="status">
-                {failed
-                  ? '작업실을 불러오지 못했지만 프로젝트는 바로 읽을 수 있습니다.'
-                  : ready
-                    ? '3D 작업실이 준비되었습니다.'
-                    : '3D 작업실을 준비 중입니다. 프로젝트는 바로 읽을 수 있습니다.'}
-              </p>
-              {slow && !ready && !failed && (
-                <p className={styles.loadingNote}>
-                  작업실 로딩이 평소보다 오래 걸리고 있습니다.
+              <div className={styles.roomPreview}>
+                <div className={styles.previewLabel}>
+                  <span>THE DEVELOPER’S ROOM</span>
+                  <span>01 / EXPLORE</span>
+                </div>
+                <div className={styles.previewCanvas} inert aria-hidden="true">
+                  {!entered && !failed && (
+                    <RoomScene
+                      reducedMotion={reducedMotion}
+                      visible={visible}
+                    />
+                  )}
+                  {failed && (
+                    <p className={styles.previewFallback}>
+                      잠시 쉬어가는 작업실.
+                      <br />
+                      <span>아래에서 프로젝트를 바로 만나보세요.</span>
+                    </p>
+                  )}
+                </div>
+                <div className={styles.previewCaption}>
+                  <div>
+                    <strong>생각이 제품이 되는 공간</strong>
+                    <p>사물을 누르며 제 작업을 둘러보세요.</p>
+                  </div>
+                  <button
+                    className={styles.explore}
+                    disabled={!ready || failed}
+                    onClick={enter}
+                  >
+                    작업실 둘러보기 <span>↗</span>
+                  </button>
+                </div>
+                <p className={styles.sceneStatus} role="status">
+                  {failed
+                    ? '3D를 사용할 수 없어도 모든 프로젝트를 읽을 수 있어요.'
+                    : ready
+                      ? '탐색 준비 완료 · 사운드는 기본으로 꺼져 있어요.'
+                      : slow
+                        ? '작업실을 준비하는 데 시간이 걸리고 있어요. 프로젝트는 바로 읽을 수 있어요.'
+                        : '작업실을 준비하고 있어요. 프로젝트는 바로 읽을 수 있어요.'}
                 </p>
-              )}
-              <a
-                className={styles.landingContact}
-                href={`mailto:${profile.email}`}
-              >
-                함께 일할 이야기가 있다면 ↗
-              </a>
-            </div>
-            <section className={styles.featuredWork} aria-label="대표 프로젝트">
-              <p className={styles.eyebrow}>SELECTED WORK / 01—02</p>
-              <Link className={styles.featuredCard} href="/projects/smartoffer">
-                <span className={styles.eyebrow}>B2B · PERFORMANCE</span>
-                <h2>
-                  SmartOffer <span aria-hidden="true">↗</span>
-                </h2>
-                <strong>{projects[1].highlight}</strong>
-                <p>
-                  목록 조회 병목을 줄이고, 서버 상태와 UI 상태의 경계를 정리한
-                  과정.
-                </p>
-                <span className={styles.cardAction}>문제 해결 과정 읽기 →</span>
-              </Link>
-              <a
-                className={styles.featuredCard}
-                href={projects[0].links[0].href}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <span className={styles.eyebrow}>AI · BUILD & OPERATE</span>
-                <h2>
-                  Jongalab <span aria-hidden="true">↗</span>
-                </h2>
-                <strong>{projects[0].highlight}</strong>
-                <p>
-                  데이터 수집부터 분석·주문·청산까지 직접 설계하고 운영하는
-                  서비스.
-                </p>
-                <small>2026년 9월 기준 · 운영 규모</small>
-                <span className={styles.cardAction}>서비스 보기 · 새 탭 ↗</span>
-              </a>
+              </div>
+            </section>
+            <section
+              className={styles.featuredWork}
+              id="selected-work"
+              aria-label="대표 프로젝트"
+            >
+              <div className={styles.workHeading}>
+                <div>
+                  <p className={styles.eyebrow}>SELECTED WORK / 2024—2026</p>
+                  <h2>
+                    직접 풀어온 문제들<span>02</span>
+                  </h2>
+                </div>
+                <p>설계부터 개선, 그리고 운영까지.</p>
+              </div>
+              <div className={styles.workGrid}>
+                {[projects[1], projects[0]].map((project, index) => (
+                  <article className={styles.featuredCard} key={project.id}>
+                    <Link
+                      href={`/projects/${project.title.toLowerCase()}`}
+                      className={styles.projectCover}
+                      aria-label={`${project.title} 사례 읽기`}
+                    >
+                      <div className={styles.coverLabel}>
+                        <span>
+                          {index === 0
+                            ? 'PRODUCT ENGINEERING'
+                            : 'INDEPENDENT PRODUCT'}
+                        </span>
+                        <span>0{index + 1} ↗</span>
+                      </div>
+                      <Image
+                        src={project.image.src}
+                        width={project.image.width}
+                        height={project.image.height}
+                        alt={project.image.alt}
+                        sizes="(max-width: 800px) 90vw, 45vw"
+                      />
+                    </Link>
+                    <div className={styles.featuredBody}>
+                      <p className={styles.eyebrow}>
+                        {index === 0
+                          ? 'B2B 솔루션 · 프론트엔드 / 성능 개선'
+                          : '개인 프로젝트 · 설계 / 개발 / 운영'}
+                      </p>
+                      <h3>
+                        <Link href={`/projects/${project.title.toLowerCase()}`}>
+                          {project.title}
+                          <span>↗</span>
+                        </Link>
+                      </h3>
+                      <p>
+                        {index === 0
+                          ? '개인화 추천 솔루션의 조회 병목을 줄이고, 서버 데이터와 화면 상태의 경계를 정리했습니다.'
+                          : 'AI 분석에서 주문·청산까지. 가설을 실제 거래로 검증하는 서비스를 만들고 운영합니다.'}
+                      </p>
+                      <div className={styles.cardResult}>
+                        <strong>{project.highlight}</strong>
+                        <small>
+                          {index === 0
+                            ? '목록 API 응답 시간 개선'
+                            : '2026년 9월 기준 · 운영 규모'}
+                        </small>
+                      </div>
+                      <div className={styles.cardLinks}>
+                        <Link href={`/projects/${project.title.toLowerCase()}`}>
+                          문제 해결 과정 읽기 →
+                        </Link>
+                        <a
+                          href={project.links[0].href}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          {index === 0 ? '제품 소개' : '서비스 방문'} ↗
+                          <span className={styles.srOnly}> (새 탭)</span>
+                        </a>
+                      </div>
+                    </div>
+                  </article>
+                ))}
+              </div>
               <button
                 className={styles.bypass}
                 onClick={() => navigate('projects')}
               >
-                전체 프로젝트 보기 <span>→</span>
+                다른 프로젝트도 살펴보기 <span>→</span>
               </button>
             </section>
+            <footer className={styles.landingFooter}>
+              <div>
+                <p className={styles.eyebrow}>LET’S BUILD TOGETHER</p>
+                <h2>함께 풀어볼 문제가 있나요?</h2>
+              </div>
+              <a href={`mailto:${profile.email}`}>{profile.email} ↗</a>
+            </footer>
           </div>
           <div className={styles.bootFooter}>
+            <span>© 2026 RHEE EURO</span>
             <span>THOUGHTFULLY BUILT, ONE DETAIL AT A TIME.</span>
-            <span>TAKE A LOOK AROUND.</span>
           </div>
         </div>
       )}

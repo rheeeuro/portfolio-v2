@@ -1,6 +1,6 @@
 'use client';
-import { Component, Suspense, type ReactNode } from 'react';
-import { Canvas } from '@react-three/fiber';
+import { Component, Suspense, useEffect, type ReactNode } from 'react';
+import { Canvas, useThree } from '@react-three/fiber';
 import { ACESFilmicToneMapping, PCFShadowMap, SRGBColorSpace } from 'three';
 import { sceneSpec, tuple } from '@/lib/scene';
 import { useNavigation } from '@/stores/navigation';
@@ -21,6 +21,15 @@ class SceneBoundary extends Component<
   render() {
     return this.state.failed ? null : this.props.children;
   }
+}
+function ContextGuard() {
+  const gl = useThree((state) => state.gl);
+  useEffect(() => {
+    const lost = () => useNavigation.setState({ failed: true });
+    gl.domElement.addEventListener('webglcontextlost', lost);
+    return () => gl.domElement.removeEventListener('webglcontextlost', lost);
+  }, [gl]);
+  return null;
 }
 export default function RoomScene({
   reducedMotion,
@@ -46,7 +55,7 @@ export default function RoomScene({
         gl={{ antialias: true, alpha: false, powerPreference: 'low-power' }}
         fallback={
           <p>
-            3D를 지원하지 않는 브라우저입니다. 메뉴에서 콘텐츠를 확인해 주세요.
+            3D를 지원하지 않는 브라우저입니다. 프로젝트를 바로 읽을 수 있습니다.
           </p>
         }
         onCreated={({ gl, camera }) => {
@@ -56,15 +65,13 @@ export default function RoomScene({
           gl.shadowMap.type = PCFShadowMap;
           camera.up.set(0, 0, 1);
           camera.lookAt(...tuple(home.target));
-          gl.domElement.addEventListener('webglcontextlost', () =>
-            useNavigation.setState({ failed: true }),
-          );
         }}
       >
+        <ContextGuard />
         <CameraController reducedMotion={reducedMotion} />
         <EnvironmentController />
         <Suspense fallback={null}>
-          <RoomModel />
+          <RoomModel reducedMotion={reducedMotion} visible={visible} />
         </Suspense>
       </Canvas>
     </SceneBoundary>

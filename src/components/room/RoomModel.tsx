@@ -56,7 +56,13 @@ function Hotspot({
     </Html>
   );
 }
-export function RoomModel() {
+export function RoomModel({
+  reducedMotion,
+  visible,
+}: {
+  reducedMotion: boolean;
+  visible: boolean;
+}) {
   const { scene } = useGLTF(sceneUrl);
   const ready = useRef(false);
   const invalidate = useThree((s) => s.invalidate);
@@ -96,6 +102,8 @@ export function RoomModel() {
           for (const material of [object.material].flat()) material.dispose();
           object.material = createWindowLandscape();
           object.geometry = screenGeometry(object.geometry);
+          const size = object.geometry.boundingBox!.getSize(new Vector3());
+          object.material.uniforms.aspect.value = size.x / size.z;
           object.castShadow = false;
           object.receiveShadow = false;
         }
@@ -108,6 +116,11 @@ export function RoomModel() {
     clone.updateMatrixWorld(true);
     return clone;
   }, [scene]);
+  const animateRain = weather === 'rain' && !reducedMotion && visible;
+  useEffect(() => {
+    // Restart demand rendering when rain, visibility, or motion preferences change.
+    invalidate();
+  }, [animateRain, invalidate]);
   const anchors = useMemo(() => {
     const center = (name: string) =>
       new Box3()
@@ -198,7 +211,14 @@ export function RoomModel() {
     },
     [model],
   );
-  useFrame(() => {
+  useFrame((_, delta) => {
+    if (animateRain) {
+      const landscape = (model.getObjectByName('sky_panel') as Mesh)
+        .material as ShaderMaterial;
+      // Avoid a jump when returning from a hidden tab or a suspended frame.
+      landscape.uniforms.time.value += Math.min(delta, 0.05);
+      invalidate();
+    }
     if (!ready.current) {
       ready.current = true;
       useNavigation.setState({ ready: true });
