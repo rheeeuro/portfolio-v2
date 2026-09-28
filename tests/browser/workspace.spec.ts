@@ -112,8 +112,8 @@ test('resume content, career details and contacts are available without WebGL', 
   await page.goto('/#about');
   const about = page.getByRole('region', { name: 'about', exact: true });
   await expect(
-    about.getByRole('link', { name: 'eurohand@naver.com' }),
-  ).toHaveAttribute('href', 'mailto:eurohand@naver.com');
+    about.getByRole('link', { name: 'rheeeuro@gmail.com' }),
+  ).toHaveAttribute('href', 'mailto:rheeeuro@gmail.com');
   await expect(about.getByText('이유로', { exact: false })).toBeVisible();
   await page.keyboard.press('Escape');
   await page.getByRole('button', { name: '03 Experience' }).click();

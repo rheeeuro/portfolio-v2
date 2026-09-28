@@ -6,7 +6,7 @@ Content is adapted from the user-supplied `[이유로] 이력서.pdf` (2 pages) 
 - `src/content/projects.ts`: portfolio pages 4–10 supply project decisions, responsibilities and links; resume page 2 supplements SpineSlicer dates and delivery results.
 - `public/assets/projects/*.webp`: screenshots extracted from portfolio pages 4 (Jongalab), 7 (SmartOffer) and 9 (Comeet).
 
-Where sources differ, use the resume's Kakao Enterprise dates (2021.12–2022.06) and contact email (`eurohand@naver.com`). The portfolio introduction lists a different email and its timeline has different internship dates. Neither alternative is presented as an additional fact.
+Where sources differ, use the resume's Kakao Enterprise dates (2021.12–2022.06). The contact email is `rheeeuro@gmail.com`, as explicitly updated by the user, overriding the supplied PDFs. Alternative internship dates and email addresses from the source documents are not presented as additional facts.
 
 Jongalab's 51 trading days and 295 trades are explicitly dated September 2026. These describe operation volume, not investment returns. Other performance and productivity figures retain the scope and wording of the supplied documents. Links are copied from their embedded PDF annotations; no current external availability is asserted.
 

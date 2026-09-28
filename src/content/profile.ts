@@ -1,9 +1,9 @@
-// Career dates and contact details follow the supplied resume where the PDFs differ.
+// Career dates follow the supplied resume; email follows the latest user instruction.
 export const profile = {
   name: '이유로',
   englishName: 'RHEE EURO',
   role: 'Frontend Developer',
-  email: 'eurohand@naver.com',
+  email: 'rheeeuro@gmail.com',
   phone: '010-9930-6272',
   introduction:
     '비용·성능·운영 복잡도를 함께 비교해 문제를 구조화하고, 측정 가능한 결과로 선택을 검증하는 프론트엔드 개발자입니다.',

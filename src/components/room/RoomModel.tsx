@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useMemo, useRef } from 'react';
+import { useEffect, useLayoutEffect, useMemo, useRef } from 'react';
 import { Html, useGLTF } from '@react-three/drei';
 import { useFrame, useThree, type ThreeEvent } from '@react-three/fiber';
 import {
@@ -91,6 +91,16 @@ export function RoomModel({
           if (material instanceof MeshStandardMaterial)
             refineMaterial(material);
         if (
+          object.name === contract.Environment &&
+          object.material instanceof MeshStandardMaterial
+        ) {
+          // The GLB glass is opaque. Set the shader mode before its first draw;
+          // changing transparent in a passive effect can leave OPAQUE compiled in.
+          object.material.transparent = true;
+          object.material.depthWrite = false;
+          object.material.metalness = 0;
+        }
+        if (
           object.name === 'window_mullion' &&
           object.material instanceof MeshStandardMaterial
         ) {
@@ -163,7 +173,7 @@ export function RoomModel({
       texture.dispose();
     };
   }, [model, invalidate]);
-  useEffect(() => {
+  useLayoutEffect(() => {
     const landscape = (model.getObjectByName('sky_panel') as Mesh)
       .material as ShaderMaterial;
     const palette = landscapePalettes[phase];
@@ -187,10 +197,7 @@ export function RoomModel({
       if (material.name === 'City_Window')
         material.emissiveIntensity = phase === 'night' ? 1.8 : 0.3;
       if (object.name === contract.Environment) {
-        material.transparent = true;
         material.opacity = weather === 'rain' ? 0.12 : 0.035;
-        material.metalness = 0;
-        material.depthWrite = false;
         material.roughness = weather === 'rain' ? 0.8 : 0.65;
       }
     });
