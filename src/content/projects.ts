@@ -1,6 +1,38 @@
 export const projects = [
   {
     id: '01',
+    title: 'SmartOffer',
+    category: 'B2B · PERSONALIZATION',
+    period: '2024.07 — 현재',
+    role: '넷스루 · 2인 개발 · 프론트엔드 및 성능 개선',
+    stack: 'React 18 · TypeScript · React Query · Redux Toolkit · Highcharts',
+    description:
+      '실시간 데이터 기반 추천 엔진으로 상품과 콘텐츠를 적시에 제공하는 개인화 추천 솔루션입니다.',
+    problem:
+      '데이터가 많은 환경에서 목록 로딩에 10초 이상 걸려 사용자가 기다려야 했습니다. 목록 조회 시 상세·연관 데이터를 한 번에 불러오는 구조가 병목이었습니다. 서버 데이터와 UI 상태가 Redux에 혼재하고 페이지마다 구현 방식이 달라 유지보수 비용도 커졌습니다.',
+    decision:
+      '목록 전용 DTO, 쿼리 개선, pagination으로 응답을 경량화했습니다. 서버 상태는 React Query, 필터 상태는 URL Search Params로 분리했습니다. Hackle·Amplitude의 실험 구조를 분석해 결합도·확장성·운영 복잡도를 비교하고 사내 구조에 맞는 A/B 테스트를 설계했습니다.',
+    implementation:
+      'A/B 테스트 고도화, 신규 디자인 가이드 적용과 주요 화면 재설계, Highcharts 기반 추천 모니터링을 담당했습니다. Formatter·Linter와 팀 컨벤션을 도입하고 금융권 고객 요구사항을 제품 기능으로 구체화했습니다.',
+    result:
+      'API 응답 시간을 190ms → 14ms로 개선했습니다(약 13.6배). 코드 컨벤션과 상태 관리 경계를 정리해 유지보수성을 높였습니다.',
+    highlight: 'API 응답 190ms → 14ms',
+    image: {
+      src: '/assets/projects/smartoffer.webp',
+      width: 685,
+      height: 382,
+      alt: '추천 영역별 상태와 조건을 관리하는 SmartOffer 목록 화면',
+      caption: '디자인 가이드를 적용한 추천 영역 관리',
+    },
+    links: [
+      {
+        label: '제품 소개',
+        href: 'https://www.nethru.co.kr/CEP/smartoffer.html',
+      },
+    ],
+  },
+  {
+    id: '02',
     title: 'Jongalab',
     category: 'AI · PERSONAL PROJECT',
     period: '2026.03 — 현재',
@@ -25,38 +57,6 @@ export const projects = [
       caption: '종목 추천과 콘텐츠 분석',
     },
     links: [{ label: '서비스 보기', href: 'https://jongalab.com' }],
-  },
-  {
-    id: '02',
-    title: 'SmartOffer',
-    category: 'B2B · PERSONALIZATION',
-    period: '2024.07 — 현재',
-    role: '넷스루 · 2인 개발 · 프론트엔드 및 성능 개선',
-    stack: 'React 18 · TypeScript · React Query · Redux Toolkit · Highcharts',
-    description:
-      '실시간 데이터 기반 추천 엔진으로 상품과 콘텐츠를 적시에 제공하는 개인화 추천 솔루션입니다.',
-    problem:
-      '목록 조회 시 상세·연관 데이터를 한 번에 불러오는 구조가 병목이었습니다. 서버 데이터와 UI 상태가 Redux에 혼재하고 페이지마다 구현 방식이 달라 유지보수 비용도 커졌습니다.',
-    decision:
-      '목록 전용 DTO, 쿼리 개선, pagination으로 응답을 경량화했습니다. 서버 상태는 React Query, 필터 상태는 URL Search Params로 분리했습니다. Hackle·Amplitude의 실험 구조를 분석해 결합도·확장성·운영 복잡도를 비교하고 사내 구조에 맞는 A/B 테스트를 설계했습니다.',
-    implementation:
-      'A/B 테스트 고도화, 신규 디자인 가이드 적용과 주요 화면 재설계, Highcharts 기반 추천 모니터링을 담당했습니다. Formatter·Linter와 팀 컨벤션을 도입하고 금융권 고객 요구사항을 제품 기능으로 구체화했습니다.',
-    result:
-      'API 응답 시간을 190ms → 14ms로 개선했습니다(약 13.6배). 코드 컨벤션과 상태 관리 경계를 정리해 유지보수성을 높였습니다.',
-    highlight: 'API 응답 190ms → 14ms',
-    image: {
-      src: '/assets/projects/smartoffer.webp',
-      width: 685,
-      height: 382,
-      alt: '추천 영역별 상태와 조건을 관리하는 SmartOffer 목록 화면',
-      caption: '디자인 가이드를 적용한 추천 영역 관리',
-    },
-    links: [
-      {
-        label: '제품 소개',
-        href: 'https://www.nethru.co.kr/CEP/smartoffer.html',
-      },
-    ],
   },
   {
     id: '03',

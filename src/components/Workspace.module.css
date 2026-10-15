@@ -222,37 +222,6 @@
 [data-hidden='true'].roomHint {
   opacity: 0;
 }
-.hotspot {
-  display: flex;
-  align-items: center;
-  gap: 9px;
-  white-space: nowrap;
-  background: #22271fd9;
-  color: #f7eddd;
-  border: 1px solid #d9c8ab70;
-  padding: 10px 13px;
-  font-size: 11px;
-  border-radius: 3px;
-  backdrop-filter: blur(8px);
-  box-shadow: 0 3px 20px #0002;
-  transition:
-    background 0.2s,
-    transform 0.2s;
-}
-.hotspot:hover {
-  background: #665942;
-  transform: translateY(-3px);
-}
-.hotspot > span {
-  width: 5px;
-  height: 5px;
-  border-radius: 50%;
-  background: #d3b387;
-}
-.hotspot small {
-  color: #d3b387;
-  font-size: 12px;
-}
 .footer {
   height: 90px;
   padding: 0 4%;
@@ -859,10 +828,6 @@
   }
   .weatherLabel {
     font-size: 7px;
-  }
-  .hotspot {
-    font-size: 10px;
-    padding: 9px;
   }
   .footer {
     padding: 0 6%;
@@ -1581,5 +1546,361 @@
   }
   .cardResult strong {
     font-size: 20px;
+  }
+}
+
+/* The room is the landing page; the work continues in document flow. */
+.quickNav {
+  display: flex;
+  gap: 28px;
+  font-size: 12px;
+}
+.quickNav a {
+  text-decoration: none;
+  padding: 12px 0;
+}
+.quickNav a:hover {
+  color: var(--accent);
+}
+.roomIntro h1 {
+  font-family: Arial, 'Apple SD Gothic Neo', sans-serif;
+  font-size: clamp(32px, 3.2vw, 50px);
+  line-height: 1.35;
+  letter-spacing: -2px;
+}
+.roomIntro h1 em {
+  font-style: normal;
+}
+.roomIntro > p {
+  font-size: 12px;
+  line-height: 1.9;
+}
+.heroProjectLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 30px;
+  margin-top: 16px;
+  padding: 13px 18px;
+  border: 1px solid #e9d7b768;
+  background: #20271dcc;
+  color: #f6f0e4;
+  border-radius: 3px;
+  font-size: 12px;
+  text-decoration: none;
+  pointer-events: auto;
+}
+.heroProjectLink:hover {
+  background: #3b4535;
+}
+.loadingStatus {
+  position: absolute;
+  left: 50%;
+  top: 58%;
+  transform: translate(-50%, -50%);
+  color: var(--muted);
+  font-size: 12px;
+  text-align: center;
+}
+.workSection {
+  background: #f3f0e8;
+  color: #35402f;
+  padding: 48px max(5%, calc((100vw - 1240px) / 2)) 0;
+}
+.workSection .featuredWork {
+  border-top: 0;
+}
+.roomIntro[data-hidden='true'] {
+  visibility: hidden;
+}
+@media (max-width: 700px) {
+  .header {
+    height: 76px;
+  }
+  .brand > span:last-child {
+    display: none;
+  }
+  .quickNav {
+    gap: 20px;
+    font-size: 11px;
+  }
+  .stage {
+    height: 690px;
+  }
+  .roomIntro h1 {
+    font-size: 34px;
+    margin: 12px 0;
+  }
+  .roomIntro > p {
+    font-size: 11px;
+  }
+  .canvas {
+    inset: 260px -110px 0;
+  }
+  .roomIndex {
+    display: none;
+  }
+  .heroProjectLink {
+    margin-top: 5px;
+  }
+  .workSection {
+    padding: 25px 6% 0;
+  }
+}
+
+/* Keep the hiring signals readable alongside the interactive room. */
+.roomIntro {
+  max-width: min(560px, 90%);
+}
+.roomIntro h1 {
+  font-size: clamp(28px, 2.8vw, 42px);
+}
+.heroEvidence {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 22px;
+  pointer-events: auto;
+}
+.heroEvidence a {
+  display: grid;
+  gap: 8px;
+  padding: 15px;
+  border: 1px solid #e9d7b745;
+  border-radius: 3px;
+  background: #20271deb;
+  color: #f6f0e4;
+  text-decoration: none;
+  text-shadow: none;
+}
+.heroEvidence a:hover {
+  border-color: #d7bd96;
+}
+.heroEvidence strong {
+  font-size: clamp(16px, 1.6vw, 23px);
+  letter-spacing: -0.6px;
+}
+.heroEvidence span {
+  font-size: 10px;
+  line-height: 1.6;
+  color: #d4d8cb;
+}
+.roomIntro .heroCareer {
+  font-size: 11px;
+  margin: 14px 0 0;
+}
+.heroCareer > span {
+  margin: 0 6px;
+  opacity: 0.5;
+}
+.skillList > div[data-primary='true'] {
+  padding: 20px;
+  background: var(--bg);
+  border: 1px solid var(--accent);
+  border-radius: 3px;
+  margin-bottom: 10px;
+}
+.skillList > div[data-primary='true'] dd:first-of-type {
+  color: var(--text);
+  font-size: 15px;
+  font-weight: 600;
+}
+.skillList .skillContext {
+  font-size: 11px;
+}
+.aiWorkflow {
+  border-top: 1px solid var(--line);
+  padding-top: 18px;
+  font-size: 12px;
+  color: var(--muted);
+}
+.aiWorkflow summary {
+  cursor: pointer;
+}
+@media (max-width: 700px) {
+  .roomIntro {
+    width: 88%;
+  }
+  .heroEvidence {
+    gap: 8px;
+    margin-top: 18px;
+  }
+  .heroEvidence a {
+    padding: 12px 10px;
+  }
+  .roomIntro .heroCareer {
+    font-size: 10px;
+    margin-bottom: 12px;
+  }
+  .canvas {
+    inset: 390px -110px 0;
+  }
+  .loadingStatus {
+    top: 72%;
+  }
+}
+
+/* A slim visible surface within a touch-friendly target, at each object anchor. */
+.hotspot {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 8px 3px;
+  border: 0;
+  border-radius: 20px;
+  background: transparent;
+  color: #f5f1e8;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.hotspotSurface {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 27px;
+  padding: 0 10px;
+  border: 1px solid #f2eada38;
+  border-radius: 20px;
+  background: #242b25b8;
+  backdrop-filter: blur(6px);
+  box-shadow:
+    0 2px 6px #0002,
+    inset 0 1px 0 #ffffff08;
+  transition:
+    background 160ms ease,
+    border-color 160ms ease,
+    transform 160ms ease;
+}
+.hotspotIcon {
+  flex-shrink: 0;
+  color: #d7c6aa;
+}
+.hotspotLabel {
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: 0.1px;
+  white-space: nowrap;
+}
+.hotspotState {
+  border-left: 1px solid #ffffff26;
+  padding-left: 6px;
+  color: #bec3b9;
+  font-size: 9px;
+}
+.hotspot[aria-pressed='true'] .hotspotState {
+  color: #ead0a5;
+}
+@media (hover: hover) {
+  .hotspot:hover .hotspotSurface {
+    background: #354136ed;
+    border-color: #dfc7a580;
+    transform: translateY(-1px);
+  }
+}
+.hotspot:focus-visible {
+  outline: none;
+}
+.hotspot:focus-visible .hotspotSurface {
+  outline: 2px solid #f3dfb9;
+  outline-offset: 3px;
+}
+.hotspot:active .hotspotSurface {
+  transform: scale(0.96);
+  background: #44513e;
+}
+@media (prefers-reduced-motion: reduce) {
+  .hotspotSurface {
+    transition: none;
+  }
+}
+
+/* The dot stays on the object; only the label moves into surrounding space. */
+.hotspotCallout {
+  position: relative;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+  --callout-x: 94px;
+  --callout-y: 38px;
+  --leader-length: 101px;
+  --leader-angle: 22deg;
+  --label-shift: 0%;
+}
+.hotspotCallout[data-label='Outside'] {
+  --callout-x: 70px;
+  --callout-y: -38px;
+  --leader-length: 80px;
+  --leader-angle: -28.5deg;
+}
+.hotspotCallout[data-label='About'] {
+  --callout-x: -54px;
+  --callout-y: 38px;
+  --leader-length: 66px;
+  --leader-angle: 144.9deg;
+  --label-shift: -100%;
+}
+.hotspotCallout[data-label='Light'] {
+  --callout-x: -140px;
+  --callout-y: 40px;
+  --leader-length: 146px;
+  --leader-angle: 164.1deg;
+  --label-shift: -100%;
+}
+.hotspotDot {
+  position: absolute;
+  left: -3px;
+  top: -3px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #f3e3c9;
+  box-shadow: 0 0 0 3px #242b2566;
+}
+.hotspotLeader {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: var(--leader-length);
+  height: 1px;
+  background: #f3e3c980;
+  transform-origin: left center;
+  transform: rotate(var(--leader-angle));
+}
+.hotspotCallout .hotspot {
+  position: absolute;
+  left: var(--callout-x);
+  top: var(--callout-y);
+  transform: translate(var(--label-shift), -50%);
+  pointer-events: auto;
+}
+.hotspotCallout:has(.hotspot:hover) .hotspotLeader,
+.hotspotCallout:has(.hotspot:focus-visible) .hotspotLeader {
+  background: #f3e3c9;
+}
+@media (max-width: 700px) {
+  .hotspotCallout {
+    --callout-x: 40px;
+    --callout-y: 30px;
+    --leader-length: 50px;
+    --leader-angle: 36.9deg;
+  }
+  .hotspotCallout[data-label='Outside'] {
+    --callout-x: 30px;
+    --callout-y: -40px;
+    --leader-length: 50px;
+    --leader-angle: -53.1deg;
+  }
+  .hotspotCallout[data-label='About'] {
+    --callout-x: -18px;
+    --callout-y: 32px;
+    --leader-length: 37px;
+    --leader-angle: 119.4deg;
+  }
+  .hotspotCallout[data-label='Light'] {
+    --callout-x: -32px;
+    --callout-y: 32px;
+    --leader-length: 45px;
+    --leader-angle: 135deg;
   }
 }

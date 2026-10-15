@@ -66,10 +66,10 @@ export function Projects() {
                 {project.role}
               </p>
               <p>{project.description}</p>
-              {project.title === 'SmartOffer' && (
+              {['SmartOffer', 'Jongalab'].includes(project.title) && (
                 <div className={styles.contentLinks}>
-                  <Link href="/projects/smartoffer">
-                    SmartOffer 상세 사례 읽기 →
+                  <Link href={`/projects/${project.title.toLowerCase()}`}>
+                    {project.title} 상세 사례 읽기 →
                   </Link>
                 </div>
               )}
@@ -162,21 +162,28 @@ export function About() {
         <div>
           <h3>Currently building</h3>
           <p>
-            AI를 개발 규칙·검증·업무 흐름에 연결하고 있습니다. 개인 프로젝트
-            Jongalab에서는 데이터 수집부터 자동매매까지 직접 구축하고
-            운영합니다.
+            개인 프로젝트 Jongalab에서 분석 리포트 UI와 데이터 수집·주문·청산
+            흐름을 연결하고, 실제 운영 결과를 바탕으로 개선합니다.
           </p>
         </div>
       </div>
-      <h3 className={styles.contentHeading}>Tools for the work</h3>
+      <h3 className={styles.contentHeading}>Frontend first</h3>
       <dl className={styles.skillList}>
         {skills.map((skill) => (
-          <div key={skill.category}>
+          <div key={skill.category} data-primary={skill.primary}>
             <dt>{skill.category}</dt>
             <dd>{skill.items}</dd>
+            <dd className={styles.skillContext}>{skill.context}</dd>
           </div>
         ))}
       </dl>
+      <details className={styles.aiWorkflow}>
+        <summary>AI Workflow / 개발을 돕는 도구</summary>
+        <p className={styles.intro}>
+          Codex·Claude Code에 프로젝트 규칙과 검증 절차를 연결합니다. 반복
+          업무용 스킬로 회의록 작성·정리를 약 2시간에서 10분으로 줄였습니다.
+        </p>
+      </details>
       <div className={styles.contactCard}>
         <p className={styles.eyebrow}>LET’S TALK</p>
         <a href={`mailto:${profile.email}`}>{profile.email}</a>
@@ -199,20 +206,6 @@ export function Experience() {
       <p className={styles.intro}>
         제품 개발, 성능 개선, 연구와 운영을 거쳐 쌓아온 경험.
       </p>
-      <div className={styles.metrics}>
-        <div>
-          <strong>190 → 14ms</strong>
-          <span>API 응답 시간 · 넷스루</span>
-        </div>
-        <div>
-          <strong>2시간 → 10분</strong>
-          <span>회의록 작성·정리 · 넷스루</span>
-        </div>
-        <div>
-          <strong>70% 향상</strong>
-          <span>시나리오 작성 생산성 · 카카오엔터프라이즈</span>
-        </div>
-      </div>
       <div className={styles.timeline}>
         {experiences.map((experience, index) => (
           <div key={experience.company}>

@@ -8,7 +8,7 @@ export const profile = {
   introduction:
     '비용·성능·운영 복잡도를 함께 비교해 문제를 구조화하고, 측정 가능한 결과로 선택을 검증하는 프론트엔드 개발자입니다.',
   focus:
-    'B2B 솔루션의 기능 설계와 성능 개선부터 AI 기반 개발·업무 자동화까지, 기존 아키텍처와 실제 운영 환경에 무리 없이 적용되는 해법을 만듭니다.',
+    'React · TypeScript 기반 B2B 솔루션의 기능 설계와 성능 개선을 맡으며, 기존 아키텍처와 실제 운영 환경에 무리 없이 적용되는 해법을 만듭니다.',
   links: [
     { label: 'GitHub', href: 'https://github.com/rheeeuro' },
     { label: 'LinkedIn', href: 'https://www.linkedin.com/in/rheeeuro/' },
@@ -18,21 +18,22 @@ export const profile = {
 
 export const skills = [
   {
-    category: 'Frontend',
-    items:
-      'React · TypeScript · JavaScript · HTML · CSS · Next.js · TanStack Query · Highcharts',
+    category: 'Core / 주력 역량',
+    primary: true,
+    items: 'React · TypeScript · JavaScript · HTML · CSS',
+    context: 'B2B 화면 설계 · 서버/UI 상태 분리 · 성능 병목 분석 및 개선',
   },
   {
-    category: 'Backend / Data',
-    items: 'Node.js · Spring Boot · Python · REST API · MariaDB · ClickHouse',
+    category: 'Frontend / 프로젝트 활용',
+    primary: false,
+    items: 'Next.js · TanStack Query · Redux Toolkit · Highcharts',
+    context: '서비스 개발과 데이터 중심 UI 구현에 활용합니다.',
   },
   {
-    category: 'Infra / Tools',
-    items: 'Docker · AWS · Git · CI/CD · Formatter / Linter',
-  },
-  {
-    category: 'AI-assisted development',
-    items: 'Codex · Claude Code · 프로젝트 룰 · 하네스 · 반복 업무용 스킬',
+    category: 'Beyond Frontend / 연계 경험',
+    primary: false,
+    items: 'Node.js · Spring Boot · Python · MariaDB · Docker · AWS',
+    context: 'API·데이터 흐름을 이해하고 개인 서비스를 배포·운영한 경험입니다.',
   },
 ];
 
@@ -43,11 +44,9 @@ export const experiences = [
     period: '2024.07 — 현재',
     description: '디지털 데이터 수집·분석·감지·활용 분야 전문 기업',
     achievements: [
-      'Hackle·Amplitude의 실험 구조를 분석하고 결합도·확장성·운영 복잡도를 비교해 A/B 테스트 고도화 구조를 설계·개발했습니다.',
-      '지연 구간과 불필요한 데이터 처리를 점검하고 응답 구조를 경량화해 API 응답 시간을 190ms에서 14ms로 개선했습니다.',
-      '프로젝트 룰·하네스와 반복 업무용 스킬을 구성해 회의록 작성·정리 시간을 약 2시간에서 10분으로 단축했습니다.',
+      '2인 개발 환경에서 SmartOffer의 프론트엔드 기능 설계·개발과 성능 개선을 담당합니다.',
+      '우리은행·BC카드·NH은행 등 금융권 고객 요구를 분석하고 제품 구조와 개발 범위를 고려해 반영 방안을 조율합니다.',
       'Formatter·Linter와 팀 컨벤션을 도입해 코드 스타일과 검증 절차를 표준화했습니다.',
-      '우리은행·BC카드·NH은행 등 금융권 고객 요구를 분석하고 제품 구조와 개발 범위를 고려해 반영 방안을 조율했습니다.',
     ],
   },
   {

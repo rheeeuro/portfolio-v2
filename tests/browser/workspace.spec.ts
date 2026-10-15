@@ -7,23 +7,16 @@ test('boot, scene, camera navigation, theme, environment and history', async ({
   page.on('pageerror', (error) => errors.push(error.message));
   await page.emulateMedia({ colorScheme: 'dark' });
   await page.goto('/');
-  const enter = page.getByRole('button', { name: '작업실 둘러보기' });
-  await expect(enter).toBeEnabled({ timeout: 30000 });
-  await page.screenshot({ path: 'test-results/boot.png' });
-  await enter.click();
-  await expect(enter).not.toBeVisible();
-  await expect(
-    page.getByRole('button', { name: '모니터에서 프로젝트 보기' }),
-  ).toBeVisible();
+  await expect(page.getByRole('button', { name: '01 Projects' })).toBeVisible();
   await page.screenshot({ path: 'test-results/home.png' });
-  await page.getByRole('button', { name: '모니터에서 프로젝트 보기' }).click();
+  await page.getByRole('button', { name: '01 Projects' }).click();
   const panel = page.getByRole('region', { name: 'projects', exact: true });
   await expect(panel).toBeVisible({ timeout: 20000 });
   await expect(panel).toHaveAttribute('aria-busy', 'false');
   await expect(
     panel.getByRole('heading', { name: 'Jongalab', exact: true }),
   ).toBeVisible();
-  await panel.locator('summary').first().click();
+  await panel.locator('summary').filter({ hasText: 'Jongalab' }).click();
   await expect(
     panel.getByRole('link', { name: '서비스 보기' }),
   ).toHaveAttribute('href', 'https://jongalab.com');
@@ -39,7 +32,7 @@ test('boot, scene, camera navigation, theme, environment and history', async ({
   await expect(
     page.getByRole('button', { name: '조명 전환', exact: true }),
   ).toHaveAttribute('aria-pressed', 'true');
-  await page.getByRole('button', { name: '노트에서 소개 보기' }).click();
+  await page.getByRole('button', { name: '02 About' }).click();
   await expect(
     page.getByRole('region', { name: 'about', exact: true }),
   ).toBeVisible({ timeout: 20000 });
@@ -72,10 +65,8 @@ test('mobile content, reduced motion and deep link', async ({ page }) => {
     page.getByRole('region', { name: 'about', exact: true }),
   ).toBeVisible({ timeout: 20000 });
   await page.keyboard.press('Escape');
-  await expect(page.locator('#mobile-projects')).toBeVisible();
-  await expect(
-    page.getByRole('button', { name: '모니터에서 프로젝트 보기' }),
-  ).toBeVisible();
+  await expect(page.locator('#selected-work')).toBeVisible();
+  await expect(page.getByRole('button', { name: '01 Projects' })).toBeVisible();
   expect(
     await page.evaluate(
       () => document.documentElement.scrollWidth <= innerWidth,
@@ -128,7 +119,7 @@ test('resume content, career details and contacts are available without WebGL', 
     experience.getByText('2021.12 — 2022.06', { exact: true }),
   ).toBeVisible();
   await expect(
-    experience.getByText('190 → 14ms', { exact: true }),
+    experience.getByText('2인 개발 환경에서 SmartOffer', { exact: false }),
   ).toBeVisible();
   await page.screenshot({ path: 'test-results/experience-content.png' });
 });
@@ -142,7 +133,6 @@ test('project texture loads and the night room remains navigable', async ({
   );
   await page.goto('/');
   expect((await preview).ok()).toBe(true);
-  await page.getByRole('button', { name: '작업실 둘러보기' }).click();
   await page.getByRole('button', { name: /LOCAL TIME/ }).click();
   const environment = page.getByRole('region', { name: 'window', exact: true });
   await environment.getByRole('button', { name: 'night', exact: true }).click();
@@ -150,11 +140,9 @@ test('project texture loads and the night room remains navigable', async ({
   await expect(
     page.getByRole('button', { name: /LOCAL TIME · NIGHT/ }),
   ).toBeVisible();
-  await expect(
-    page.getByRole('button', { name: '모니터에서 프로젝트 보기' }),
-  ).toBeVisible();
+  await expect(page.getByRole('button', { name: '01 Projects' })).toBeVisible();
   await page.screenshot({ path: 'test-results/room-night.png' });
-  await page.getByRole('button', { name: '모니터에서 프로젝트 보기' }).click();
+  await page.getByRole('button', { name: '01 Projects' }).click();
   await expect(
     page.getByRole('region', { name: 'projects', exact: true }),
   ).toHaveAttribute('aria-busy', 'false');

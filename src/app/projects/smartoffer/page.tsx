@@ -5,7 +5,7 @@ import { projects } from '@/content/projects';
 import { profile } from '@/content/profile';
 import styles from './page.module.css';
 
-const project = projects[1];
+const project = projects[0];
 export const metadata: Metadata = {
   title: 'SmartOffer — 조회 성능과 상태 관리 개선 | 이유로',
   description:

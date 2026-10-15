@@ -5,7 +5,7 @@ import { projects } from '@/content/projects';
 import { profile } from '@/content/profile';
 import styles from '../smartoffer/page.module.css';
 
-const project = projects[0];
+const project = projects[1];
 export const metadata: Metadata = {
   title: 'Jongalab — AI 분석부터 실거래 검증까지 | 이유로',
   description:

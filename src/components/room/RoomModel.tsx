@@ -1,5 +1,15 @@
 'use client';
-import { useEffect, useLayoutEffect, useMemo, useRef } from 'react';
+import {
+  createContext,
+  useContext,
+  type Dispatch,
+  type SetStateAction,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import { Html, useGLTF } from '@react-three/drei';
 import { useFrame, useThree, type ThreeEvent } from '@react-three/fiber';
 import {
@@ -18,7 +28,13 @@ import { useNavigation } from '@/stores/navigation';
 import { useEnvironment } from '@/stores/environment';
 import { toggleAudio } from '@/stores/audio';
 import { createWindowLandscape, landscapePalettes } from './windowLandscape';
+
 import styles from '../Workspace.module.css';
+import { SilhouetteOutline } from './SilhouetteOutline';
+
+const OutlineSelection = createContext<Dispatch<SetStateAction<Mesh[]>>>(
+  () => {},
+);
 
 const contract = sceneSpec.interaction_contract;
 function action(name: string): (() => void) | undefined {
@@ -40,20 +56,92 @@ function Hotspot({
   label,
   detail,
   onClick,
+  pressed,
+  targets,
 }: {
   position: Vector3;
   label: string;
   detail: string;
   onClick: () => void;
+  pressed?: boolean;
+  targets: Mesh[];
 }) {
+  const [hovered, setHovered] = useState(false);
+  const [focused, setFocused] = useState(false);
+  const selectOutline = useContext(OutlineSelection);
+  const highlighted = hovered || focused;
+  useEffect(() => {
+    if (!highlighted) return;
+    selectOutline(targets);
+    return () =>
+      selectOutline((current) => (current === targets ? [] : current));
+  }, [highlighted, targets, selectOutline]);
   return (
-    <Html position={position} center zIndexRange={[20, 10]}>
-      <button className={styles.hotspot} onClick={onClick} aria-label={detail}>
-        <span />
-        {label}
-        <small>↗</small>
-      </button>
-    </Html>
+    <>
+      <Html position={position} zIndexRange={[20, 10]}>
+        <div className={styles.hotspotCallout} data-label={label}>
+          <span className={styles.hotspotDot} aria-hidden="true" />
+          <span className={styles.hotspotLeader} aria-hidden="true" />
+          <button
+            className={styles.hotspot}
+            onClick={onClick}
+            onPointerEnter={(event) => {
+              if (event.pointerType !== 'touch') setHovered(true);
+            }}
+            onPointerLeave={() => setHovered(false)}
+            onPointerCancel={() => setHovered(false)}
+            onFocus={(event) =>
+              setFocused(event.currentTarget.matches(':focus-visible'))
+            }
+            onBlur={() => setFocused(false)}
+            aria-label={detail}
+            aria-pressed={pressed}
+          >
+            <span className={styles.hotspotSurface}>
+              <svg
+                className={styles.hotspotIcon}
+                width="13"
+                height="13"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.6"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden="true"
+              >
+                {label === 'Projects' ? (
+                  <>
+                    <rect x="3" y="4" width="18" height="13" rx="2" />
+                    <path d="M8 21h8M12 17v4" />
+                  </>
+                ) : label === 'About' ? (
+                  <>
+                    <rect x="5" y="3" width="15" height="18" rx="2" />
+                    <path d="M9 3v18M12 8h5M12 12h5" />
+                  </>
+                ) : label === 'Outside' ? (
+                  <>
+                    <rect x="4" y="3" width="16" height="18" rx="2" />
+                    <path d="M12 3v18M4 12h16" />
+                  </>
+                ) : (
+                  <>
+                    <path d="M9 18h6M10 21h4M8 14a6 6 0 1 1 8 0c-1 1-1 2-1 2H9s0-1-1-2Z" />
+                  </>
+                )}
+              </svg>
+              <span className={styles.hotspotLabel}>{label}</span>
+              {pressed !== undefined && (
+                <span className={styles.hotspotState}>
+                  {pressed ? 'On' : 'Off'}
+                </span>
+              )}
+            </span>
+          </button>
+        </div>
+      </Html>
+    </>
   );
 }
 export function RoomModel({
@@ -64,6 +152,7 @@ export function RoomModel({
   visible: boolean;
 }) {
   const { scene } = useGLTF(sceneUrl);
+  const [outlineSelection, setOutlineSelection] = useState<Mesh[]>([]);
   const ready = useRef(false);
   const invalidate = useThree((s) => s.invalidate);
   const theme = useEnvironment((s) => s.theme);
@@ -126,6 +215,33 @@ export function RoomModel({
     clone.updateMatrixWorld(true);
     return clone;
   }, [scene]);
+  const outlineTargets = useMemo(() => {
+    const meshes = (names: string[]) =>
+      names
+        .map((name) => model.getObjectByName(name))
+        .filter((object): object is Mesh => object instanceof Mesh);
+    return {
+      monitor: meshes([
+        'monitor_monitor_body',
+        'monitor_monitor_stand_neck',
+        'monitor_monitor_stand_base',
+      ]),
+      notebook: meshes([
+        'notebook_cover_back',
+        'notebook_cover_front',
+        'notebook_pages',
+      ]),
+      window: meshes([
+        contract.Environment,
+        'window_frame_left',
+        'window_frame_right',
+        'window_frame_top',
+        'window_frame_bottom',
+        'window_mullion',
+      ]),
+      switch: meshes(['switch_switch_body', contract.Theme]),
+    };
+  }, [model]);
   const animateRain = weather === 'rain' && !reducedMotion && visible;
   useEffect(() => {
     // Restart demand rendering when rain, visibility, or motion preferences change.
@@ -148,7 +264,7 @@ export function RoomModel({
     const material = screen.material as MeshStandardMaterial;
     let active = true;
     const texture = new TextureLoader().load(
-      projects[1].image.src,
+      projects[0].image.src,
       () => {
         if (!active) return;
         texture.colorSpace = SRGBColorSpace;
@@ -240,6 +356,9 @@ export function RoomModel({
   };
   return (
     <>
+      {view === 'home' && outlineSelection.length > 0 && (
+        <SilhouetteOutline targets={outlineSelection} />
+      )}
       <primitive
         object={model}
         onClick={click}
@@ -262,51 +381,85 @@ export function RoomModel({
         }}
       />
       {view === 'home' && entered && (
-        <>
-          <Monitor position={anchors.monitor} />
-          <Notebook position={anchors.notebook} />
-          <Window position={anchors.window} />
-          <LightSwitch position={anchors.switch} />
-        </>
+        <OutlineSelection.Provider value={setOutlineSelection}>
+          <Monitor
+            position={anchors.monitor}
+            targets={outlineTargets.monitor}
+          />
+          <Notebook
+            position={anchors.notebook}
+            targets={outlineTargets.notebook}
+          />
+          <Window position={anchors.window} targets={outlineTargets.window} />
+          <LightSwitch
+            position={anchors.switch}
+            targets={outlineTargets.switch}
+          />
+        </OutlineSelection.Provider>
       )}
     </>
   );
 }
-function Monitor({ position }: { position: Vector3 }) {
+
+function Monitor({
+  position,
+  targets,
+}: {
+  position: Vector3;
+  targets: Mesh[];
+}) {
   return (
     <Hotspot
       position={position}
+      targets={targets}
       label="Projects"
       detail="모니터에서 프로젝트 보기"
       onClick={() => useNavigation.getState().navigate('projects')}
     />
   );
 }
-function Notebook({ position }: { position: Vector3 }) {
+function Notebook({
+  position,
+  targets,
+}: {
+  position: Vector3;
+  targets: Mesh[];
+}) {
   return (
     <Hotspot
       position={position}
+      targets={targets}
       label="About"
       detail="노트에서 소개 보기"
       onClick={() => useNavigation.getState().navigate('about')}
     />
   );
 }
-function Window({ position }: { position: Vector3 }) {
+function Window({ position, targets }: { position: Vector3; targets: Mesh[] }) {
   return (
     <Hotspot
       position={position}
+      targets={targets}
       label="Outside"
       detail="창문 환경 설정"
       onClick={() => useNavigation.getState().navigate('window')}
     />
   );
 }
-function LightSwitch({ position }: { position: Vector3 }) {
+function LightSwitch({
+  position,
+  targets,
+}: {
+  position: Vector3;
+  targets: Mesh[];
+}) {
+  const light = useEnvironment((state) => state.theme === 'light');
   return (
     <Hotspot
       position={position}
+      targets={targets}
       label="Light"
+      pressed={light}
       detail="방 조명 전환"
       onClick={() => useEnvironment.getState().toggleTheme()}
     />

@@ -17,7 +17,6 @@ test('window landscape is identical on first entry and reload', async ({
     await route.continue();
   });
   await page.goto('/');
-  await page.getByRole('button', { name: '작업실 둘러보기' }).click();
   await page.getByRole('button', { name: /LOCAL TIME/ }).click();
   const panel = page.getByRole('region', { name: 'window', exact: true });
   await expect(panel).toHaveAttribute('aria-busy', 'false');

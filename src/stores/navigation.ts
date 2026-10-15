@@ -12,7 +12,7 @@ interface NavigationState {
 }
 export const useNavigation = create<NavigationState>((set, get) => ({
   view: 'home',
-  entered: false,
+  entered: true,
   ready: false,
   failed: false,
   transitioning: false,
